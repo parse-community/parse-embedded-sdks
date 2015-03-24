@@ -70,6 +70,7 @@ ${TARGET}: \
   ${OBJDIR}/network.o \
   ${OBJDIR}/pinmux.o \
   ${OBJDIR}/time.o \
+  ${OBJDIR}/urlencode.o \
   \
   ${OBJDIR}/uart_if.o \
   ${OBJDIR}/button_if.o \
