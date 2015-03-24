@@ -1,0 +1,26 @@
+Source: parse-embedded-c-sdk
+Priority: optional
+Maintainer: Damian Kowalewski <damian@eneda.net>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.4
+Section: libs
+Homepage: https://www.parse.com
+#Vcs-Git: git://git.debian.org/collab-maint/things.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/things.git;a=summary
+
+Package: parse-embedded-dev
+Section: libdevel
+Architecture: any
+Depends: parse-embedded (= ${binary:Version})
+Description: Parse Embedded C SDK headers
+ This package includes all the headers required
+ for development with Parse Embedded C SDK.
+
+Package: parse-embedded
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Parse Embedded C SDK runtime
+ This package includes all the shared libraries
+ for apps that are compiled with support for
+ Parse Embedded C SDK.

@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For Parse 
+#######################################
+
+#######################################
+# Library (KEYWORD3)
+#######################################
+
+Parse	KEYWORD3
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ParseClient	KEYWORD1
+ParseResponse	KEYWORD1
+ParsePush	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2

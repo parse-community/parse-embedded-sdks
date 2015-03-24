@@ -1,0 +1,5 @@
+parse-embedded-c-sdk (1.0.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Damian Kowalewski <damiank@unknown>  Tue, 03 Mar 2015 22:18:11 -0800

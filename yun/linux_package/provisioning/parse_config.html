@@ -1,0 +1,197 @@
+<html>
+<head>
+  <title>Parse Configuration</title>
+  <style>
+    body {
+      background-color: #00979c;
+      color: #222;
+      font: 1em "Lucida Grande", Lucida, Verdana, sans-serif;
+    }
+  </style>
+</head>
+<body>
+<div style="visibility: hidden; display: none;">
+  <table id="template">
+    <tr>
+      <td>"KEY"</td>
+      <td><input name="KEY" type="hidden" value="VALUE"> <input name="KEY" value="VALUE" type="text"></td>
+    </tr>
+  </table>
+</div>
+
+<div style="background: none repeat scroll 0 0 #F5F5F5">
+  <div style="padding: 2em;">
+    <div id="storage">
+          Retrieving storage values...
+    </div>
+    <br/>
+    <input id="refresh" type="button" value="Refresh provisioning values">
+    <br/>
+    <br/>
+    
+    <div id="provisioning">
+      <table>
+        <!-- for now we ask user to configure wifi initially in default aruidno.local webui
+        <tr>
+        	<td> WiFi SSID: </td>
+        	<td><input id="ssid" type="text" maxlength="64" name="__SL_P_USA" /></td>
+        </tr>
+        <tr>
+          <td> Security Type: </td>
+          <td>
+            <input id="securityMode" type="radio" name="__SL_P_USB" value="0" checked />Open
+            <input id="securityMode" type="radio" name="__SL_P_USB" value="1" />WEP
+            <input id="securityMode" type="radio" name="__SL_P_USB" value="2" />WPA
+          </td>
+        </tr>
+        <tr>
+        	<td> WiFi Security Key: </td>
+        	<td><input id="password" type="text" maxlength="64" name="__SL_P_USC" /></td>
+        </tr>
+        -->
+        <tr>
+        	<td> Device name(Optional): </td>
+        	<td><input id="deviceName" type="text" maxlength="64" name="__SL_P_USH" /></td>
+        </tr>
+        <tr>
+        	<td> Parse Application ID: </td>
+        	<td><input id="appId" type="text" maxlength="64" name="__SL_P_USD" /></td>
+        </tr>
+        <tr>
+        	<td> Parse Application Client Key: </td>
+        	<td><input id="clientKey" type="text" maxlength="64" name="__SL_P_USE" /></td>
+        </tr>
+        <tr>
+        	<td> Installation ID: </td>
+        	<td><input id="installationId" type="text" maxlength="64" name="__SL_P_USF" /></td>
+        </tr>
+        <tr>
+        	<td> Session Token: </td>
+        	<td><input id="sessionToken" type="text" maxlength="64" name="__SL_P_USG" /></td>
+        </tr>
+      </table>
+    </div>
+    <input id="submit" name="__SL_P_USZ" type="submit" value="Add">
+  </div>
+</div>
+<script type="text/javascript" src="zepto.min.js"></script>
+<script>
+  "use strict";
+
+  var please_wait_message = "upload provisioning information...";
+
+  function util_make_basic_auth(user, password) {
+    var tok = user + ':' + (password || "arduino");
+    var hash = btoa(tok);
+    return "Basic " + hash;
+  }
+
+  function add_basic_auth_headers_if_password(ajax_call_options, password) {
+    if (password && password !== "") {
+      ajax_call_options.headers = {
+        Authorization: util_make_basic_auth("root", password)
+      }
+    }
+  }
+
+  function error_handler(error) {
+    if (error && error.status && error.status === 500) {
+      alert("Error accessing the key/value store. Is the Blink example sketch running?");
+    }
+
+    console.log(arguments);
+  }
+
+  function storage_retrieve_all(callback) {
+    var ajax_call_options = {
+      url: "/data/get",
+      timeout: 10000,
+      success: callback,
+      error: error_handler
+    };
+    $.ajax(ajax_call_options)
+  }
+
+  function storage_delete_by_key(key, callback) {
+    var ajax_call_options = {
+      url: "/data/delete/" + encodeURIComponent(key),
+      timeout: 10000,
+      success: callback,
+      error: error_handler
+    };
+    $.ajax(ajax_call_options)
+  }
+
+  function storage_update_key_value(key, value, callback) {
+    var ajax_call_options = {
+      url: "/data/put/" + encodeURIComponent(key) + "/" + encodeURIComponent(value),
+      timeout: 10000,
+      success: callback,
+      error: error_handler
+    };
+    $.ajax(ajax_call_options)
+  }
+
+  function repaint_storage(storage) {
+    $("#storage").empty();
+
+    if (storage.value.length === 0) {
+      $("#storage").html("Storage is empty!");
+      return;
+    }
+
+    var template = $("#template tbody").html();
+
+    var html = "";
+    for (var key in storage.value) {
+      html = html + template.replace(/KEY/g, key).replace(/VALUE/g, storage.value[key]);
+    }
+    $("#storage").html("<table><tr><td>Key</td><td>Value</td><td></td></tr>" + html + "</table>");
+  }
+
+  function confirm_storage_key_deletion(event) {
+    var key = $(event.target).attr("name");
+    if (confirm("Are you sure you want to delete key \"" + key + "\" ?")) {
+      storage_delete_by_key(key, function() {
+        $("#storage").html(please_wait_message);
+        storage_retrieve_all(repaint_storage);
+      });
+    }
+  }
+
+  function update_storage(callback) {
+    var keys_to_update = [];
+    $("#provisioning input[type=text]").each(function(idx, item) {
+      var $key_value = $(item);
+        keys_to_update.push({
+          key: $key_value.attr("id"),
+          value: $key_value.val()
+        });
+    });
+
+    var done = 0;
+    for (var idx = 0; idx < keys_to_update.length; idx++) {
+      storage_update_key_value(keys_to_update[idx].key, keys_to_update[idx].value, function() {
+        done++;
+        callback();
+      });
+    }
+  }
+
+  $(function() {
+    $("#storage").html(please_wait_message);
+    storage_retrieve_all(repaint_storage);
+    $("#submit").on("click", function() {
+      update_storage(function() {
+        $("#storage").html(please_wait_message);
+        storage_retrieve_all(repaint_storage);
+      })
+    });
+    $("#refresh").on("click", function() {
+      $("#storage").html(please_wait_message);
+      storage_retrieve_all(repaint_storage);
+    });
+  });
+</script>
+</body>
+</html>

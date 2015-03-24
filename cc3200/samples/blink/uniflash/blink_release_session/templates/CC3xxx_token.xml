@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CC3xxx>
+   <Version>
+      <Platform>CC31xx Simple Link device</Platform>
+      <SoftwareMajor>1</SoftwareMajor>
+      <SoftwareMinor>0</SoftwareMinor>
+      <Software_sub_Minor>0</Software_sub_Minor>
+   </Version>
+   <Filename name="/sys/mcuimg.bin">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/cert/ca.pem">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/cert/client.pem">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/cert/private.key">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/macadd.bin">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/mode.cfg">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/ipcfg.ini">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/ap.cfg">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/devname.cfg">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/mdns.cfg">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/dhcpsrv.cfg">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/httpsrv.cfg">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/pref.net">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/smartconfigkeys.cfg">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/stacfg.ini">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/p2p.cfg">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="/sys/pmcfg.ini">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="www/parse_config.html">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+</CC3xxx>
