@@ -51,7 +51,6 @@ ${TARGET}: \
   ${OBJDIR}/request.o \
   ${OBJDIR}/session.o \
   ${OBJDIR}/simplejson.o \
-  ${OBJDIR}/urlencode.o \
   \
   ${OBJDIR}/cc3200_certificate.o \
   ${OBJDIR}/cc3200_client_state.o \
