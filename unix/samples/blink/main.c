@@ -115,7 +115,7 @@ static void blinkGetInstallationObjectIdByIdCallback(ParseClient client, int err
     installationObjectId[0] = '\0';
     if ((error == 0) && (httpStatus >= 200 && httpStatus < 300))
     {
-        char queryResults[400] = {0};
+        char queryResults[1024] = {0};
         short status = simpleJson(httpResponseBody, "results", queryResults, sizeof(queryResults));
         if ((status != 0) && (queryResults[1] == '{'))
         {
@@ -128,7 +128,7 @@ static void blinkGetInstallationObjectId(ParseClient client)
 {
     if (installationObjectId[0] == '\0') {
         char query[60];
-        sprintf(query, "where={\"installationId\": \"%s\"}", parseGetInstallationId(client));
+        sprintf(query, "where={\"installationId\":\"%s\"}", parseGetInstallationId(client));
         parseSendRequest(client, "GET", "/1/installations", query, blinkGetInstallationObjectIdByIdCallback);
     }
 }
@@ -138,7 +138,7 @@ static void blinkGetModelObjectIdByNameCallback(ParseClient client, int error, i
     modelObjectId[0] = '\0';
     if ((error == 0) && (httpStatus >= 200 && httpStatus < 300))
     {
-        char queryResults[400] = {0};
+        char queryResults[1024] = {0};
         short status = simpleJson(httpResponseBody, "results", queryResults, sizeof(queryResults));
         if ((status != 0) && (queryResults[1] == '{'))
         {
@@ -157,7 +157,7 @@ static void blinkGetUserObjectId(ParseClient client)
 static void blinkGetModelObjectId(ParseClient client)
 {
     if(modelObjectId[0] == '\0') {
-        parseSendRequest(client, "GET", "/1/classes/Model", "where={\"appName\": \"fbdr000001a\"}", blinkGetModelObjectIdByNameCallback);
+        parseSendRequest(client, "GET", "/1/classes/Model", "where={\"appName\":\"fbdr000001a\"}", blinkGetModelObjectIdByNameCallback);
     }
 }
 
