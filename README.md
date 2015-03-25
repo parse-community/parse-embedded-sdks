@@ -1,6 +1,6 @@
 #Parse Embedded C SDKs
 
-Parse Embedded C SDKs provide support for Arduino Yún, Raspberry Pi, and TI CC3200.
+[Parse Embedded C SDKs](https://www.parse.com/products/iot) provide support for Arduino Yún, Raspberry Pi, and TI CC3200.
 
 ##Arduino Yún
 
