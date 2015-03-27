@@ -162,14 +162,12 @@ static int parseOsRemoveDir(const char* dir) {
     char filename[FILENAME_MAX];
 
     dir_ptr = opendir(dir);
-    if (dir_ptr != NULL)
-    {
+    if (dir_ptr != NULL) {
         while ((entry_ptr = readdir(dir_ptr))) {
             struct stat entry_stats;
             snprintf(filename, FILENAME_MAX, "%s/%s", dir, entry_ptr->d_name);
 
-            if (lstat(filename, &entry_stats) < 0)
-            {
+            if (lstat(filename, &entry_stats) < 0) {
                 parseLog(PARSE_LOG_ERROR, "Could not stat %s\n", filename);
                 return 1;
             }
