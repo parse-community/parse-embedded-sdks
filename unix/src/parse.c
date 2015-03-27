@@ -319,7 +319,7 @@ int parseStartPushService(ParseClient client)
     char push[256];
     snprintf(push,
              sizeof(push),
-             "{\"installation_id\":\"%s\", \"oauth_key\":\"%s\", \"v\":\"e1.0.0\", \"last\":null, \"ack_keep_alive\":true}\n",
+             "{\"installation_id\":\"%s\", \"oauth_key\":\"%s\", \"v\":\"e1.0.0\", \"last\":null}\n",
              clientInternal->installationId,
              clientInternal->applicationId);
 
