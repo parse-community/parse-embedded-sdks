@@ -32,7 +32,7 @@ Please follow our [Parse Arduino Quickstart](https://www.parse.com/apps/quicksta
 
 Please follow our [Parse Raspberry Pi Quickstart](https://www.parse.com/apps/quickstart#embedded/raspberrypi). See the [include](/include), [unix](/unix), and [debian](/debian) directories for more details.
 
-###TI CC3200 / OTHER Real time operatings systems
+###TI CC3200 / other Real-time operatings systems (RTOS)
 
 Please follow our [Parse CC3200 Quickstart](https://www.parse.com/apps/quickstart#embedded/ticc3200). See the [cc3200 directory](/cc3200) for more details.
 
