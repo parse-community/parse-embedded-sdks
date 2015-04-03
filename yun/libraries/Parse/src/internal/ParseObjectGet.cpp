@@ -26,5 +26,5 @@ ParseObjectGet::ParseObjectGet() : ParseRequest() {
 }
 
 ParseResponse ParseObjectGet::send() {
-	return Parse.sendRequest("GET", httpPath, "", "");
+	return Parse.sendRequest("GET", httpPath, "", false);
 }

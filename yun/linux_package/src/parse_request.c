@@ -31,7 +31,7 @@
 char* verb = "GET";
 char* endpoint = "/";
 char* data = "";
-char* params = NULL;
+bool isQuery = false;
 
 void arduinoCallHandler(ParseClient client, int error, int httpStatus, const char* httpResponseBody) {
   if (error != 0 || httpResponseBody == NULL) { return; }
@@ -91,7 +91,7 @@ void arduinoGetSessionToken(ParseClient client) {
     fprintf(stdout, "%s", st);
   } else {
     fprintf(stdout, "\n");
-  } 
+  }
   fflush(stdout);
 }
 
@@ -101,7 +101,7 @@ void arduinoGetSessionToken(ParseClient client) {
 * -v - http verb
 * -e - http endpoint
 * -d - request body
-* -p - parameters (used only for Parse query)
+* -p - is request a query (used only for Parse query)
 * -i - command to get installation id
 */
 int main(int argc , char **argv) {
@@ -110,7 +110,7 @@ int main(int argc , char **argv) {
 
   yunReadProvisioningInfo();
 
-  ParseClient client = parseInitialize(g_cAppID,g_cClientKey);
+  ParseClient client = parseInitialize(g_cAppID, g_cClientKey);
 
   if(g_cInstallationID[0] != '\0') {
 	parseSetInstallationId(client, g_cInstallationID);
@@ -119,7 +119,7 @@ int main(int argc , char **argv) {
 	parseSetSessionToken(client, g_cSessionToken);
   }
 
-  while((c=getopt(argc,argv,"v:e:d:p:is"))!=-1){
+  while((c=getopt(argc,argv,"v:e:d:pis"))!=-1){
     switch(c){
       case 'v': // http verb
       if(!(verb=strdup(optarg))){
@@ -136,9 +136,8 @@ int main(int argc , char **argv) {
       }
       fprintf(stderr, "data = '%s'\n", data);
       break;
-      case 'p': // parameters
-      if(!(params=strdup(optarg))){
-      }
+      case 'p': // is request query
+      isQuery = true;
       break;
       case 'i':
       arduinoGetInstallationId(client);
@@ -149,15 +148,11 @@ int main(int argc , char **argv) {
     }
   }
 
-  if (strncmp("GET", verb, 3) == 0) {
-    data = params;
-  }
-
   if (client) {
-    if (!params) {
+    if (!isQuery) {
       parseSendRequest(client, verb, endpoint, data, arduinoCallHandler);
     } else {
-      parseSendRequest(client, verb, endpoint, params, arduinoQueryHandler);
+      parseSendRequest(client, verb, endpoint, data, arduinoQueryHandler);
     }
   }
 

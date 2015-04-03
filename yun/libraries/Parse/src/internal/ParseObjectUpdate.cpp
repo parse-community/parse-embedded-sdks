@@ -31,5 +31,5 @@ ParseResponse ParseObjectUpdate::send() {
 		requestBody += "}";
 	}
 
-	return Parse.sendRequest("PUT", httpPath, requestBody, "");
+	return Parse.sendRequest("PUT", httpPath, requestBody, false);
 }
