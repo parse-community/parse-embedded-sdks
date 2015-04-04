@@ -47,7 +47,7 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
-	$(CP) -r $(PATH_TO_SOURCE)/embedded/yun/linux_package/* $(PKG_BUILD_DIR)/
+	$(CP) -r $(PATH_TO_SOURCE)/yun/linux_package/* $(PKG_BUILD_DIR)/
 	$(call Build/Prepare/Default)
 endef
 

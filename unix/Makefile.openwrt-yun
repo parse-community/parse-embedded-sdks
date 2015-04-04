@@ -47,7 +47,7 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
-	$(CP) -r $(PATH_TO_SOURCE)/embedded/* $(PKG_BUILD_DIR)/
+	$(CP) -r $(PATH_TO_SOURCE)/* $(PKG_BUILD_DIR)/
 	$(call Build/Prepare/Default)
 	( cd $(PKG_BUILD_DIR) ; \
 		[ -f ./configure ] || { \
