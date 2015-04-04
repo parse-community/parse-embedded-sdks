@@ -42,6 +42,7 @@ RemoteSystemsTempFiles/
 **/stamp-h1
 **/.deps/
 **/.libs/
+**/*.o
 **/common/Makefile
 **/common/Makefile.in
 **/common/*.la
@@ -52,10 +53,12 @@ RemoteSystemsTempFiles/
 **/unix/src/Makefile.in
 **/unix/src/*.la
 **/unix/src/*.lo
-**/unix/samples/simple_parse_loop/*.o
 **/unix/samples/simple_parse_loop/simple_parse_loop
-**/unix/samples/simple_custom_loop/*.o
 **/unix/samples/simple_custom_loop/simple_custom_loop
+**/unix/yun/Makefile
+**/unix/yun/Makefile.in
+**/unix/yun/parse_push
+**/unix/yun/parse_request
 **/debian/files
 **/debian/*.log
 **/debian/*.substvars
