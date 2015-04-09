@@ -52,7 +52,7 @@ int tcp_connect(const char *host, int port)
 }
 
 int tcp_close(int sock) {
-  close(sock);
+  return close(sock);
 }
 
 int tcp_write(int sock, char* data) {

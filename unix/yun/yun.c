@@ -25,6 +25,8 @@
 #include <string.h>
 #include <parse.h>
 
+#include "client.h"
+#include "utils.h"
 #include "yun.h"
 
 char g_cAppID[APPLICATION_ID_MAX_LEN + 1];

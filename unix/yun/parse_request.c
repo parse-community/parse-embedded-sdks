@@ -24,6 +24,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "client.h"
+#include "utils.h"
 #include "yun.h"
 
 #define PARSE_BUFSIZE 2048
@@ -57,7 +59,7 @@ void arduinoQueryHandler(ParseClient client, int error, int httpStatus, const ch
   while(1){
     ch = fgetc(stdin); //read(stdin, &ch, 1);
     if(ch == 'n') { // nextObject() called in Arduino
-      next = getNextFromJSONArray(next, next + nextSize, &nextSize);
+      next = (char *)getNextFromJSONArray(next, next + nextSize, &nextSize);
       if (nextSize > 0 && next) {
         char* object = malloc(sizeof(char) * (nextSize+1));
         snprintf(object, nextSize+1, "%s", next);
