@@ -26,6 +26,7 @@
 #include <fcntl.h>
 #include <parse.h>
 
+#include "utils.h"
 #include "yun.h"
 
 #define PARSE_BUFSIZE 2048
