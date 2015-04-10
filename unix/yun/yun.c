@@ -34,7 +34,7 @@ char g_cClientKey[CLIENT_KEY_MAX_LEN + 1];
 char g_cInstallationID[INSTALLATION_ID_MAX_LEN + 1];
 char g_cSessionToken[SESSION_TOKEN_MAX_LEN + 1];
 
-void yunReadProvisioningInfo() {
+int yunReadProvisioningInfo() {
   int socketHandle = -1;
   char buf[128];
   char value[64];
@@ -79,8 +79,10 @@ void yunReadProvisioningInfo() {
         strncpy(g_cSessionToken, value, sizeof(g_cSessionToken));
       }
     }
-		
     tcp_close(socketHandle);
+    return 1;
+  } else {
+    return 0;
   }
 }
 
