@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include "client.h"
+#include "config.h"
 #include "utils.h"
 #include "yun.h"
 
@@ -97,20 +98,75 @@ void arduinoGetSessionToken(ParseClient client) {
   fflush(stdout);
 }
 
-/*
-* main function to handle Parse GET/CREATE/DELETE/UPDATE/QUERY request
-* @params
-* -v - http verb
-* -e - http endpoint
-* -d - request body
-* -p - parameters (used only for Parse query)
-* -i - command to get installation id
-*/
+void displayHelp() {
+    fprintf(stderr,
+            "parse_request, version %s\n"
+            "Usage: parse_request [option] ...\n"
+            "\n"
+            "  -v - set http verb\n"
+            "  -e - set http endpoint\n"
+            "  -d - set http request body\n"
+            "  -p - set parameters (used only for Parse query)\n"
+            "  -i - query installation id\n"
+            "  -s - query session token\n"
+            "  -a - set application id\n"
+            "  -k - set client key\n"
+            "  -x - set installation id\n"
+            "  -y - set session token\n"
+            "\n", VERSION);
+}
+
 int main(int argc , char **argv) {
   char c;
-  extern char* optarg;
 
-  yunReadProvisioningInfo();
+  int isYun = yunReadProvisioningInfo();
+
+  // process pre init options
+  while((c=getopt(argc,argv,":a:k:x:y:v:e:d:p:ish"))!=-1){
+    switch(c) {
+        case 'h':
+            displayHelp();
+            exit(0);
+        case 'a':
+            strncpy(g_cAppID, optarg, sizeof(g_cAppID));
+            break;
+        case 'k':
+            strncpy(g_cClientKey, optarg, sizeof(g_cClientKey));
+            break;
+        case 'x':
+            strncpy(g_cInstallationID, optarg, sizeof(g_cInstallationID));
+            break;
+        case 'y':
+            strncpy(g_cSessionToken, optarg, sizeof(g_cSessionToken));
+            break;
+        case 'v':
+        case 'e':
+        case 'd':
+        case 'p':
+        case 'i':
+        case 's':
+            // these we want to process later
+            break;
+        case ':':
+          fprintf(stderr, "%s: option '-%c' requires an argument\n", argv[0], optopt);
+          exit(0);
+        case '?':
+          fprintf(stderr, "%s: option '-%c' is not recognized \n", argv[0], optopt);
+          exit(0);
+        default:
+          fprintf(stderr, "%s: option '-%c' is not implemented\n", argv[0], optopt);
+          exit(0);
+    }
+  }
+
+  if (g_cAppID[0] == '\0') {
+    fprintf(stdout, "{\"error\":\"missing application id\"}\n");
+    exit(0);
+  }
+  if (g_cClientKey[0] == '\0') {
+    fprintf(stdout, "{\"error\":\"missing client key\"}\n");
+    exit(0);
+  }
 
   ParseClient client = parseInitialize(g_cAppID,g_cClientKey);
 
@@ -121,33 +177,36 @@ int main(int argc , char **argv) {
 	parseSetSessionToken(client, g_cSessionToken);
   }
 
-  while((c=getopt(argc,argv,"v:e:d:p:is"))!=-1){
+  // process post init options
+  optreset = 1;
+  optind = 1;
+
+  while((c=getopt(argc,argv,":a:k:x:y:v:e:d:p:ish"))!=-1){
     switch(c){
       case 'v': // http verb
-      if(!(verb=strdup(optarg))){
-        return -1;
-      }
-      break;
+        if(!(verb=strdup(optarg))){
+            return -1;
+        }
+        break;
       case 'e': // http endpoint
-      if(!(endpoint=strdup(optarg))){
-        return -1;
-      }
-      break;
+        if(!(endpoint=strdup(optarg))){
+            return -1;
+        }
+        break;
       case 'd': // request body
-      if(!(data=strdup(optarg))){
-      }
-      fprintf(stderr, "data = '%s'\n", data);
-      break;
+        if(!(data=strdup(optarg))){
+        }
+        break;
       case 'p': // parameters
-      if(!(params=strdup(optarg))){
-      }
-      break;
+        if(!(params=strdup(optarg))){
+        }
+        break;
       case 'i':
-      arduinoGetInstallationId(client);
-      exit(0);
+        arduinoGetInstallationId(client);
+        exit(0);
       case 's':
-      arduinoGetSessionToken(client);
-      exit(0);
+        arduinoGetSessionToken(client);
+        exit(0);
     }
   }
 
