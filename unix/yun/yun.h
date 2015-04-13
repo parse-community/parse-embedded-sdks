@@ -29,6 +29,6 @@ extern char g_cClientKey[CLIENT_KEY_MAX_LEN + 1];
 extern char g_cInstallationID[INSTALLATION_ID_MAX_LEN + 1];
 extern char g_cSessionToken[SESSION_TOKEN_MAX_LEN + 1];
 
-void yunReadProvisioningInfo();
+int yunReadProvisioningInfo();
 
 #endif //__YUN_H__

@@ -24,72 +24,66 @@
 
 int tcp_connect(const char *host, int port)
 {
-  struct hostent *hp;
-  struct sockaddr_in addr;
-  int sock;
-  if(!(hp=gethostbyname(host))) {
-    fprintf(stdout, "e:Couldn't resolve host\n");
-    return 0;
-  }
-  memset(&addr,0,sizeof(addr));
-  addr.sin_addr=*(struct in_addr*)
-    hp->h_addr_list[0];
-  addr.sin_family=AF_INET;
-  addr.sin_port=htons(port);
+    struct hostent *hp;
+    struct sockaddr_in addr;
+    int sock;
+    if(!(hp=gethostbyname(host))) {
+        return -1;
+    }
+    memset(&addr,0,sizeof(addr));
+    addr.sin_addr=*(struct in_addr*) hp->h_addr_list[0];
+    addr.sin_family=AF_INET;
+    addr.sin_port=htons(port);
 
-  if((sock=socket(AF_INET,SOCK_STREAM,
-  IPPROTO_TCP))<0) {
-    fprintf(stdout, "e:Couldn't create socket\n");
-    return 0;
-  }
-  if(connect(sock,(struct sockaddr *)&addr,
-  sizeof(addr))<0) {
-    fprintf(stdout, "e:Couldn't connect socket\n");
-    return 0;
-  }
+    if((sock=socket(AF_INET,SOCK_STREAM, IPPROTO_TCP))<0) {
+        return -1;
+    }
+    if(connect(sock,(struct sockaddr *)&addr, sizeof(addr))<0) {
+        return -1;
+    }
 
-  return sock;
+    return sock;
 }
 
 int tcp_close(int sock) {
-  close(sock);
+    return close(sock);
 }
 
 int tcp_write(int sock, char* data) {
-  int n_sent = 0;
-  int n_bytes = strlen(data);
-  int n_tmp = 0;
-  while(n_sent < n_bytes && (n_tmp = send(sock, data+n_sent, n_bytes-n_sent, 0))) {
-    if(n_tmp == -1){
-      break;
+    int n_sent = 0;
+    int n_bytes = strlen(data);
+    int n_tmp = 0;
+    while(n_sent < n_bytes && (n_tmp = send(sock, data+n_sent, n_bytes-n_sent, 0))) {
+        if(n_tmp == -1){
+            break;
+        }
+        n_sent += n_tmp;
     }
-    n_sent += n_tmp;
-  }
 
 
-  if(n_sent < n_bytes){
-    // write incomplete
-    return 0;
-  }
+    if(n_sent < n_bytes){
+        // write incomplete
+        return 0;
+    }
 
-  return 1;
+    return 1;
 }
 
 int tcp_read(int sock, char* data, int size, int timeout_sec) {
-  int n_recv = 0;
-  int n_tmp = 0;
-  struct timeval tv;
-  tv.tv_sec = timeout_sec; // timeout
-  tv.tv_usec = 0;
-  setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
-  while(n_recv < size && (n_tmp = recv(sock, data+n_recv, size-n_recv, 0)) > 0){
-    if (n_tmp <= 0){
-      //fprintf(stdout, "i:nothing to read\n");
-      break;
+    int n_recv = 0;
+    int n_tmp = 0;
+    struct timeval tv;
+    tv.tv_sec = timeout_sec; // timeout
+    tv.tv_usec = 0;
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
+    while(n_recv < size && (n_tmp = recv(sock, data+n_recv, size-n_recv, 0)) > 0){
+        if (n_tmp <= 0){
+            //fprintf(stdout, "i:nothing to read\n");
+            break;
+        }
+        n_recv += n_tmp;
     }
-    n_recv += n_tmp;
-  }
-  data[n_recv] = '\0';
-  return n_recv;
+    data[n_recv] = '\0';
+    return n_recv;
 }
 
