@@ -21,6 +21,7 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -37,6 +38,7 @@
 #include <simplejson.h>
 
 #define PARSE_HEARTBIT_INTERVAL_SECONDS (14 * 60) // issue heartbeat every 14 minutes
+#define PARSE_REQUEST_TIMEOUT_SECONDS (1 * 60) // abort connection if not done in 1 minute
 
 #define PARSE_INSTALLATION_ID "installationID"
 #define PARSE_SESSION_TOKEN "sessionToken"
@@ -455,6 +457,19 @@ void parseSendRequest(
     parseSendRequestInternal(client, httpVerb, httpPath, requestBody, callback, 1);
 }
 
+static int parseProgressInternal(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
+{
+    unsigned long startTime = (uintptr_t) clientp;
+    unsigned long nowTime = secondsSinceBoot();
+
+    if (nowTime - startTime > PARSE_REQUEST_TIMEOUT_SECONDS) {
+        parseLog(PARSE_LOG_WARN, "Request timeout after %i seconds.\n", nowTime - startTime);
+        return 1;
+    }
+
+    return 0;
+}
+
 static void parseSendRequestInternal(
         ParseClient client,
         const char *httpVerb,
@@ -576,14 +591,34 @@ static void parseSendRequestInternal(
         return;
     }
 
+    result = curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+    if (result != CURLE_OK) {
+        if (callback != NULL) callback(client, result, 0, NULL);
+        return;
+    }
+
+    result = curl_easy_setopt(curl, CURLOPT_XFERINFODATA, (void*)((uintptr_t)secondsSinceBoot()));
+    if (result != CURLE_OK) {
+        if (callback != NULL) callback(client, result, 0, NULL);
+        return;
+    }
+
+    result = curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, parseProgressInternal);
+    if (result != CURLE_OK) {
+        if (callback != NULL) callback(client, result, 0, NULL);
+        return;
+    }
+
     result = curl_easy_perform(curl);
     if (result != CURLE_OK) {
+        // We use callback to implement timeout so let's report the
+        // error as timeout in the case callback aborted the request.
+        if (result == CURLE_ABORTED_BY_CALLBACK) result = CURLE_OPERATION_TIMEDOUT;
         if (callback != NULL) callback(client, result, 0, NULL);
         return;
     }
     curl_easy_cleanup(curl);
     curl_slist_free_all(headers);
-
 }
 
 int parseGetErrorCode(const char *httpResponseBody)
