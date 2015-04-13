@@ -42,6 +42,7 @@
 
 #define PARSE_INSTALLATION_ID "installationID"
 #define PARSE_SESSION_TOKEN "sessionToken"
+#define PARSE_LAST_PUSH_TIME "lastPushTime"
 
 typedef struct _ParseClientInternal {
     const char *applicationId;
@@ -50,6 +51,7 @@ typedef struct _ParseClientInternal {
     char *objectId;
     char *sessionToken;
     char *osVersion;
+    char *lastPushTime;
     parsePushCallback pushCallback;
     CURL *pushCurlHandle;
     unsigned long long lastHearbeat;
@@ -120,7 +122,7 @@ ParseClient parseInitialize(
         const char *applicationId,
         const char *clientKey)
 {
-    parseSetLogLevel(PARSE_LOG_NONE);
+    parseSetLogLevel(PARSE_LOG_WARN);
 
     ParseClientInternal *client = calloc(1, sizeof(ParseClientInternal));
     if (client == NULL) {
@@ -145,6 +147,11 @@ ParseClient parseInitialize(
     parseOsLoadKey(client->applicationId, PARSE_SESSION_TOKEN, temp, sizeof(temp));
     if (temp[0] != '\0') {
         parseSetSessionToken((ParseClient)client, temp);
+    }
+
+    parseOsLoadKey(client->applicationId, PARSE_LAST_PUSH_TIME, temp, sizeof(temp));
+    if (temp[0] != '\0') {
+        client->lastPushTime = strdup(temp);
     }
 
     curl_global_init(CURL_GLOBAL_ALL);
@@ -319,11 +326,20 @@ int parseStartPushService(ParseClient client)
     size_t sent;
 
     char push[256];
-    snprintf(push,
+    if (clientInternal->lastPushTime) {
+        snprintf(push,
+             sizeof(push),
+             "{\"installation_id\":\"%s\", \"oauth_key\":\"%s\", \"v\":\"e1.0.0\", \"last\":\"%s\"}\n",
+             clientInternal->installationId,
+             clientInternal->applicationId,
+             clientInternal->lastPushTime);
+    } else {
+        snprintf(push,
              sizeof(push),
              "{\"installation_id\":\"%s\", \"oauth_key\":\"%s\", \"v\":\"e1.0.0\", \"last\":null}\n",
              clientInternal->installationId,
              clientInternal->applicationId);
+    }
 
     curl_easy_send(curl, push, strlen(push), &sent);
 
@@ -389,6 +405,17 @@ int parseProcessNextPushNotification(ParseClient client)
         if (length > 0 && message != NULL) {
 
             message[length] = '\0'; // We assume messages are separated by '\n'.
+            parseLog(PARSE_LOG_INFO, "message = '%s'\n", message);
+
+            char time[32];
+            if (simpleJsonProcessor(message, "time", time, sizeof(time))) {
+                if (clientInternal->lastPushTime) {
+                    free(clientInternal->lastPushTime);
+                }
+                clientInternal->lastPushTime = strdup(time);
+                parseOsStoreKey(clientInternal->applicationId, PARSE_LAST_PUSH_TIME, time);
+                parseLog(PARSE_LOG_INFO, "lastPush = '%s'\n", clientInternal->lastPushTime);
+            }
             if (strncmp("{}", message, 2) == 0) {
                 // we got a hearbeat back
                 parseLog(PARSE_LOG_DEBUG, "got heartbeat\n");
