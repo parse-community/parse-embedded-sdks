@@ -66,6 +66,7 @@ void arduinoQueryHandler(ParseClient client, int error, int httpStatus, const ch
         snprintf(object, nextSize+1, "%s", next);
         fprintf(stdout, "%s", object);
         fflush(stdout);
+        free(object);
       } else { // no more object, end
         return;
       }
