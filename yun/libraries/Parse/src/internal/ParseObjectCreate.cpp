@@ -95,5 +95,5 @@ ParseResponse ParseObjectCreate::send() {
 	if (!isBodySet) {
 		requestBody += "}";
 	}
-	return Parse.sendRequest("POST", httpPath, requestBody, false);
+	return Parse.sendRequest("POST", httpPath, requestBody, "");
 }

@@ -127,14 +127,13 @@ public:
    *  \param   httpVerb - GET/DELETE/PUT/POST
    *  \param   httpPath - the endpoint of REST API e.g. /1/installations
    *  \param   requestBody - http request body in json format, leave it as "" for DELTE/GET requests
-   *           or use it to specify query condition e.g. where={"KEY1"":VALUE1}&limit=10&keys=KEY1,KEY2
-   *           NOTE: isQuery needs to be set as true if you use requestBody as query condition
-   *  \param   isQuery - if the request is a query
-   *  \result  response of request
+   *  \param   urlParams - leave it as "" unless to perform a Parse query,
+   *            use it to specify query condition e.g. where={"KEY1"":VALUE1}&limit=10&keys=KEY1,KEY2
+   *  \result response of request
    *  NOTE: ParseObjectCreate, ParseObjectUpdate, ParseObjectDelete, ParseGETObject,
    *  ParseQuery, ParseCloudFunction, ParseTrackEvent can also be used for REST API call
    */
-  ParseResponse sendRequest(const char* httpVerb, const char* httpPath, const char* requestBody, bool isQuery);
+  ParseResponse sendRequest(const char* httpVerb, const char* httpPath, const char* requestBody, const char* urlParams);
 
   /*! \fn ParseResponse sendRequest(const String& httpVerb, const String& httpPath, const String& requestBody, const String& urlParams)
    *  \brief Directly call REST API in Parse.
@@ -142,14 +141,13 @@ public:
    *  \param   httpVerb - GET/DELETE/PUT/POST
    *  \param   httpPath - the endpoint of REST API e.g. /1/installations
    *  \param   requestBody - http request body in json format, leave it as "" for DELTE/GET requests
-   *           or use it to specify query condition e.g. where={"KEY1"":VALUE1}&limit=10&keys=KEY1,KEY2
-   *           NOTE: isQuery needs to be set as true if you use requestBody as query condition
-   *  \param   isQuery - if the request is a query
-   *  \result  response of request
+   *  \param   urlParams - leave it as "" unless to perform a Parse query,
+   *            use it to specify query condition e.g. where={"KEY1"":VALUE1}&limit=10&keys=KEY1,KEY2
+   *  \result response of request
    *  NOTE: ParseObjectCreate, ParseObjectUpdate, ParseObjectDelete, ParseGETObject,
    *  ParseQuery, ParseCloudFunction, ParseTrackEvent can also be used for REST API call
    */
-  ParseResponse sendRequest(const String& httpVerb, const String& httpPath, const String& requestBody, bool isQuery);
+  ParseResponse sendRequest(const String& httpVerb, const String& httpPath, const String& requestBody, const String& urlParams);
 
   /*! \fn int startPushService()
    *  \brief Start the push notifications service.
