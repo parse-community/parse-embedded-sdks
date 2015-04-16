@@ -13,7 +13,7 @@
         "createdAt": "2015-03-23T23:28:35.710Z",
         "leverDown": true,
         "objectId": "I4S0FgSeqT",
-        "s": "1",
+        "stringField": "1",
         "score": 3,
         "temperature": 88,
         "updatedAt": "2015-03-25T01:35:56.238Z"
@@ -27,7 +27,7 @@
         "createdAt": "2015-03-23T22:53:50.156Z",
         "leverDown": false,
         "objectId": "E9A7EhqHTT",
-        "s": "1",
+        "stringField": "1",
         "score": 4,
         "temperature": 10,
         "updatedAt": "2015-03-24T08:15:37.573Z"
@@ -42,7 +42,7 @@
         "createdAt": "2015-03-23T16:40:25.288Z",
         "leverDown": true,
         "objectId": "EFi7f7M9KU",
-        "s": "foo",
+        "stringField": "foo",
         "score": 5,
         "temperature": 88,
         "updatedAt": "2015-03-25T01:36:46.318Z"
@@ -51,7 +51,7 @@
         "ACL": {},
         "createdAt": "2015-03-24T08:03:59.537Z",
         "objectId": "Kb7PBSVth3",
-        "s": "2",
+        "stringField": "2",
         "temperature": 4,
         "updatedAt": "2015-03-25T01:12:29.181Z"
     },
@@ -59,7 +59,7 @@
         "ACL": {},
         "createdAt": "2015-03-24T08:03:53.470Z",
         "objectId": "vfJRozV2u6",
-        "s": "1",
+        "stringField": "1",
         "temperature": 5,
         "updatedAt": "2015-03-25T01:12:25.602Z"
     },
@@ -67,7 +67,7 @@
         "ACL": {},
         "createdAt": "2015-03-24T07:10:44.586Z",
         "objectId": "69HYdAk1tj",
-        "s": "1",
+        "stringField": "1",
         "temperature": 6,
         "updatedAt": "2015-03-25T01:12:21.840Z"
     },
@@ -83,7 +83,7 @@
         },
         "createdAt": "2015-03-24T00:11:05.908Z",
         "objectId": "qWEoK5NrGq",
-        "s": "1",
+        "stringField": "1",
         "score": 1,
         "temperature": 100,
         "updatedAt": "2015-03-24T09:35:24.376Z"
@@ -100,7 +100,7 @@
         },
         "createdAt": "2015-03-24T00:08:37.847Z",
         "objectId": "bjb0EZaoFr",
-        "s": "1",
+        "stringField": "1",
         "score": 2,
         "temperature": 999,
         "updatedAt": "2015-03-25T01:22:14.616Z"
