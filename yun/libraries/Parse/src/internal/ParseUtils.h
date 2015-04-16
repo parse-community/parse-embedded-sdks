@@ -188,6 +188,8 @@ public:
       delete[] value;
       return  v;
     }
+
+    delete[] value;
     return 0;
   }
 
@@ -206,6 +208,8 @@ public:
       delete[] value;
       return  v;
     }
+
+    delete[] value;
     return .0;
   }
 
@@ -224,6 +228,8 @@ public:
       delete[] value;
       return v;
     }
+
+    delete[] value;
     return false;
   }
 };
