@@ -26,5 +26,5 @@ ParseObjectDelete::ParseObjectDelete() : ParseRequest() {
 }
 
 ParseResponse ParseObjectDelete::send() {
-	return Parse.sendRequest("DELETE", httpPath, "", "");
+	return Parse.sendRequest("DELETE", httpPath, "", false);
 }

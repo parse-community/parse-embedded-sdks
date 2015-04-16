@@ -182,6 +182,6 @@ ParseResponse ParseQuery::send() {
 		urlParameters += "&keys=";
 		urlParameters += returnedFields;
 	}
-	return Parse.sendRequest("GET", httpPath, "", urlParameters);
+	return Parse.sendRequest("GET", httpPath, urlParameters, true);
 }
 
