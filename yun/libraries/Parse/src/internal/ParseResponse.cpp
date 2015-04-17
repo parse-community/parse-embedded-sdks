@@ -24,79 +24,83 @@
 #include "ParseUtils.h"
 
 ParseResponse::ParseResponse(Process* client) {
-	buf = NULL;
-	tmpBuf = NULL;
-	bufSize = 0;
-	isUserBuffer = false;
-	this->client = client;
+  buf = NULL;
+  tmpBuf = NULL;
+  bufSize = 0;
+  isUserBuffer = false;
+  this->client = client;
+}
+
+ParseResponse::~ParseResponse() {
+  close();
 }
 
 void ParseResponse::setBuffer(char* buffer, int size) {
-	if(!buffer || size <= 0) {
-		return;
-	}
+  if(!buffer || size <= 0) {
+    return;
+  }
 
-	buf = buffer;
-	bufSize = size;
-	isUserBuffer = true;
-	memset(buf, 0, bufSize);
+  buf = buffer;
+  bufSize = size;
+  isUserBuffer = true;
+  memset(buf, 0, bufSize);
 }
 
 int ParseResponse::available() {
-	return client->available();
+  return client->available();
 }
 
 void ParseResponse::read() {
-	if(buf == NULL) {
-		bufSize = BUFSIZE;
-		buf = new char[bufSize];
-		memset(buf, 0, bufSize);
-	}
+  if(buf == NULL) {
+    bufSize = BUFSIZE;
+    buf = new char[bufSize];
+    memset(buf, 0, bufSize);
+  }
 
-	if (p == bufSize - 1) {
-		return;
-	}
-	while (p < bufSize-1 && available()) {
-		buf[p++] = client->read();
-	}
+  if (p == bufSize - 1) {
+    return;
+  }
+  while (p < bufSize-1 && available()) {
+    buf[p++] = client->read();
+  }
   while(available()) {
     client->read(); //discard exccessive data which buffer cannot contain
   }
-	buf[bufSize-1] = 0;
+  buf[bufSize-1] = 0;
 }
 
 int ParseResponse::getErrorCode() {
-	return getInt("code");
+  return getInt("code");
 }
 
 const char* ParseResponse::getJSONBody() {
-	read();
-	return buf;
+  read();
+  return buf;
 }
 
 const char* ParseResponse::getString(const char* key) {
-	read();
-	if(!tmpBuf) {
-		tmpBuf = new char[64];
-	}
-	memset(tmpBuf, 0, 64);
-	ParseUtils::getStringFromJSON(buf, key, tmpBuf, 64);
-	return tmpBuf;
+  read();
+  if(!tmpBuf) {
+    tmpBuf = new char[64];
+  }
+  memset(tmpBuf, 0, 64);
+  ParseUtils::getStringFromJSON(buf, key, tmpBuf, 64);
+  return tmpBuf;
 }
 
 int ParseResponse::getInt(const char* key) {
-	read();
-	return ParseUtils::getIntFromJSON(buf, key);
+  read();
+  return ParseUtils::getIntFromJSON(buf, key);
 }
 
 double ParseResponse::getDouble(const char* key) {
-	read();
-	return ParseUtils::getFloatFromJSON(buf, key);
+  read();
+  return ParseUtils::getFloatFromJSON(buf, key);
 }
 
 bool ParseResponse::getBoolean(const char* key) {
-	read();
-	return ParseUtils::getBooleanFromJSON(buf, key);
+  read();
+  return ParseUtils::getBooleanFromJSON(buf, key);
 }
 
 void ParseResponse::readWithTimeout(int maxSec) {
@@ -110,7 +114,7 @@ bool ParseResponse::nextObject(){
   if(resultCount <= 0) {
     count();
   }
-  
+
   if(resultCount <= 0) {
     return false;
   }
@@ -138,23 +142,25 @@ int ParseResponse::count() {
   read();
 
   String c = buf;
-	int count = c.toInt();
+  int count = c.toInt();
   resultCount = count;
   return count;
 }
 
 void  ParseResponse::freeBuffer() {
-	if (!isUserBuffer) { // only free non-user buffer
-		delete[] buf;
-	}
-	if (tmpBuf) {
-		delete[] tmpBuf;
-	}
+  if (!isUserBuffer && buf) { // only free non-user buffer
+    delete[] buf;
+    buf = NULL;
+  }
+  if (tmpBuf) {
+    delete[] tmpBuf;
+    tmpBuf = NULL;
+  }
 }
 
 void ParseResponse::close() {
-	if (client) {
-		client->close();
-	}
-	freeBuffer();
+  if (client) {
+    client->close();
+  }
+  freeBuffer();
 }

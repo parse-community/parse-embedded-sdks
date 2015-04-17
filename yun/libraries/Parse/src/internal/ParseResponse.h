@@ -50,6 +50,11 @@ protected:
   ParseResponse(Process* client);
 
 public:
+  /*! \fn ParseResponse()
+   *  \brief Destructor of ParseResponse object
+   */
+  ~ParseResponse();
+
   /*! \fn void setBuffer(char* buffer, int size)
    *  \brief set the customer buffer for writing response data.
    *
