@@ -49,6 +49,10 @@ public:
    *  \brief Constructor of ParseClient object
    */
   ParseClient();
+  /*! \fn ParseClient()
+   *  \brief Destructor of ParseClient object
+   */
+  ~ParseClient();
 
   /*! \fn begin(const char *applicationId, const char *clientKey)
    *  \brief Initialize the Parse client and user session
