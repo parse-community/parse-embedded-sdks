@@ -157,9 +157,11 @@ void ParseClient::stopPushService() {
 void ParseClient::end() {
   if(installationId) {
     delete[] installationId;
+    installationId = NULL;
   }
   if(sessionToken) {
     delete[] sessionToken;
+    sessionToken = NULL;
   }
 
   stopPushService();
