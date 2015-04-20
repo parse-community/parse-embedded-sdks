@@ -232,6 +232,20 @@ public:
     delete[] value;
     return false;
   }
+
+  static bool isSanitizedString(const String& userData) {
+    static char badChars[] = " \t\n\r";
+    int k;
+    int i;
+    for(k = 0; k < userData.length(); k++) {
+      for(i = 0; i < strlen(badChars); i++) {
+        if(userData[k] == badChars[i]){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 };
 
 #endif
