@@ -20,6 +20,7 @@
  */
 
 #include "ParseClient.h"
+#include "ParseUtils.h"
 
 ParseClient::ParseClient() {
 }
@@ -95,20 +96,25 @@ ParseResponse ParseClient::sendRequest(const char* httpVerb, const char* httpPat
 ParseResponse ParseClient::sendRequest(const String& httpVerb, const String& httpPath, const String& requestBody, const String& urlParams) {
   requestClient.begin("parse_request");  // start a process that launch the "parse_request" command
 
-  requestClient.addParameter("-v");
-  requestClient.addParameter(httpVerb);
-  requestClient.addParameter("-e");
-  requestClient.addParameter(httpPath);
-  if (requestBody != "") {
-    requestClient.addParameter("-d");
-    requestClient.addParameter(requestBody);
-  }
-  if (urlParams != "") {
-    requestClient.addParameter("-p");
-    requestClient.addParameter(urlParams);
-    requestClient.runAsynchronously();
-  } else {
-    requestClient.run(); // Run the process and wait for its termination
+  if( ParseUtils::isSanitizedString(httpVerb)
+  && ParseUtils::isSanitizedString(httpPath)
+  && ParseUtils::isSanitizedString(requestBody)
+  && ParseUtils::isSanitizedString(urlParams)) {
+    requestClient.addParameter("-v");
+    requestClient.addParameter(httpVerb);
+    requestClient.addParameter("-e");
+    requestClient.addParameter(httpPath);
+    if (requestBody != "") {
+      requestClient.addParameter("-d");
+      requestClient.addParameter(requestBody);
+    }
+    if (urlParams != "") {
+      requestClient.addParameter("-p");
+      requestClient.addParameter(urlParams);
+      requestClient.runAsynchronously();
+    } else {
+      requestClient.run(); // Run the process and wait for its termination
+    }
   }
 
   ParseResponse response(&requestClient);
