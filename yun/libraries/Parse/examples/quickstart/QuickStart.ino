@@ -4,7 +4,7 @@
 /***** Quickstart of Parse Arduino Yún SDK *****/
 // https://www.parse.com/apps/quickstart#embedded/arduinoyun
 
-ParseClient client;
+/***** NOTE: ParseClient Parse is defined in SDK *****/
 
 void setup() {
 
