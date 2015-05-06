@@ -9,7 +9,6 @@
 * back an ack to Parse
 */
 
-ParseClient parse;
 String ledState;
 const int BUFSIZE = 200;
 
@@ -21,7 +20,7 @@ void setLedState(char state[]) {
   // send current led state to parse
   ParseObjectCreate create;
   create.setClassName("Event");
-  create.add("installationId", parse.getInstallationId());
+  create.add("installationId", Parse.getInstallationId());
   create.add("alarm", true);
   String value = "{\"state\":\"";
   value += state;
@@ -55,7 +54,7 @@ void setup() {
   while (!Serial); // wait for a console connection
 
   // appId and clientKey will be provided in provisioning
-  parse.begin(NULL, NULL);
+  Parse.begin(NULL, NULL);
 
   // do provisioning now
   Serial.println("Please go to arduino.local/parse_config.html to complete device provisioning. Press y when you are done.");
@@ -69,14 +68,14 @@ void setup() {
   }
 
   Serial.println("Parse blinky example started");
-  Serial.println(parse.getInstallationId());
-  Serial.println(parse.getSessionToken());
+  Serial.println(Parse.getInstallationId());
+  Serial.println(Parse.getSessionToken());
 
   // Turn off LED
   setLedState("off");
 
   /* start push service */
-  if(parse.startPushService()) {
+  if(Parse.startPushService()) {
     Serial.println("\nParse push started\n");
   }
 }
@@ -95,8 +94,8 @@ void loop() {
   }
 
   // check if any new push message
-  if (parse.pushAvailable()) {
-    ParsePush push = parse.nextPush();
+  if (Parse.pushAvailable()) {
+    ParsePush push = Parse.nextPush();
 
     // print whole JSON body
     Serial.print("New push message content: ");

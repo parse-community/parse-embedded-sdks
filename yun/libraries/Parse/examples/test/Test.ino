@@ -5,7 +5,6 @@
 /***** Integration Tests of Parse Arduino Yún SDK *****/
 // NOTE: import Tempereture.json into yoru Parse app before running the test
 
-ParseClient client;
 int i = 0; // testId for a specific test
 
 void basicObjectTest() {
@@ -102,7 +101,7 @@ void setup() {
   while (!Serial); // wait for a serial connection
 
   // Initialize Parse
-  client.begin("", "");
+  Parse.begin("", "");
 }
 
 void loop() {
