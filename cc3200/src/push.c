@@ -55,14 +55,15 @@ int parseStartPushService(ParseClient client) {
         DEBUG_PRINT("[Parse] Push service started.\r\n");
 #endif /* CLIENT_DEBUG */
 
-        int lastPushHashLen = 0; //strlen(parseClient->lastPushHash);
-        sprintf(pushDataBuffer,
-                "{\"installation_id\":\"%s\", \"oauth_key\":\"%s\", \"v\": \"e1.0.0\", \"last\": %s%s%s}\r\n",
-                parseClient->installationId,
-                parseClient->applicationId,
-                lastPushHashLen > 0 ? "\"" : "",
-                lastPushHashLen > 0 ? parseClient->lastPushHash : "null",
-                lastPushHashLen > 0 ? "\"" : ""
+        int lastPushTimeLen = strlen(parseClient->lastPushTime);
+        snprintf(pushDataBuffer,
+        		 sizeof(pushDataBuffer)-1,
+                 "{\"installation_id\":\"%s\", \"oauth_key\":\"%s\", \"v\": \"e1.0.0\", \"last\": %s%s%s}\r\n",
+                 parseClient->installationId,
+                 parseClient->applicationId,
+                 lastPushTimeLen > 0 ? "\"" : "",
+                 lastPushTimeLen > 0 ? parseClient->lastPushTime : "null",
+                 lastPushTimeLen > 0 ? "\"" : ""
                 );
 
 #ifdef PUSH_DEBUG
@@ -173,19 +174,24 @@ int parseProcessNextPushNotification(ParseClient client) {
         if (length > 0 && message != NULL) {
             // We assume messages are separated by '\n'.
             message[length] = '\0';
-            if ((strncmp("{}", message, 2) != 0) && (parseClient->callback != NULL)) {
-                parseClient->callback(client, 0, message);
-//                int dataLength = -1;
-//                int dataStart = 0;
-//                char *messageData = (char *)getPushJson(message+1, strlen(message)-1, &dataStart, &dataLength);
-//                if (messageData != NULL) {
-//                    simpleJsonProcessor(messageData, "push_hash", parseClient->lastPushHash, PUSH_HASH_MAX_LEN);
-//#ifdef PUSH_DEBUG
-//                    DEBUG_PRINT("[Parse] Push hash: %s\r\n", parseClient->lastPushHash);
-//#endif /* PUSH_DEBUG */
-//                    saveClientState(parseClient);
-//                }
+
+#ifdef PUSH_DEBUG
+			DEBUG_PRINT("[Parse] Push notification: %s\r\n", message);
+#endif /* PUSH_DEBUG */
+
+			if (simpleJsonProcessor(message, "time", parseClient->lastPushTime, PUSH_TIME_MAX_LEN)) {
+#ifdef PUSH_DEBUG
+				DEBUG_PRINT("[Parse] Last push time: %s\r\n", parseClient->lastPushTime);
+#endif /* PUSH_DEBUG */
+				saveClientState(parseClient);
             }
+
+            if (strncmp("{}", message, 2) == 0) {
+            	// we got a heartbeat back
+            } else if (parseClient->callback != NULL) {
+                parseClient->callback(client, 0, message);
+            }
+
             pushDataBufferUsed -= length + 1;
             if (pushDataBufferUsed > 0) {
                 memmove(pushDataBuffer, pushDataBuffer + length + 1, pushDataBufferUsed);

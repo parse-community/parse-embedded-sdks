@@ -73,7 +73,7 @@ void fetchDeviceOSVersion() {
     status = sl_DevGet(SL_DEVICE_GENERAL_CONFIGURATION, &configOpt, &configLen, (unsigned char *)(&ver));
 
     if(status >= 0) {
-        sprintf(g_osVersion, "%lu.%lu.%lu.%lu", ver.NwpVersion[0], ver.NwpVersion[1], ver.NwpVersion[2], ver.NwpVersion[3]);
+        snprintf(g_osVersion, sizeof(g_osVersion)-1, "%lu.%lu.%lu.%lu", ver.NwpVersion[0], ver.NwpVersion[1], ver.NwpVersion[2], ver.NwpVersion[3]);
     }
 }
 
@@ -93,11 +93,13 @@ void createNewInstallationId(ParseClientInternal *parseClient) {
         randInitialized = TRUE;
     }
 
-    sprintf(parseClient->installationId, "%x%x%x%x%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x%x%x%x%x%x%x%x%x",
-            rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16,
-            rand()%16, rand()%16, rand()%16, rand()%16,
-            rand()%16, rand()%16, rand()%16, rand()%16,
-            rand()%16, rand()%16, rand()%16, rand()%16,
-            rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16
-        );
+    snprintf(parseClient->installationId,
+    		 sizeof(parseClient->installationId)-1,
+    		 "%x%x%x%x%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x%x%x%x%x%x%x%x%x",
+             rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16,
+             rand()%16, rand()%16, rand()%16, rand()%16,
+             rand()%16, rand()%16, rand()%16, rand()%16,
+             rand()%16, rand()%16, rand()%16, rand()%16,
+             rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16
+            );
 }

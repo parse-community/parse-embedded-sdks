@@ -63,13 +63,13 @@ short loadClientState(ParseClientInternal *parseClient) {
 #endif /* CLIENT_DEBUG */
 
     readOffset = readOffset + status;
-    status = sl_FsRead(clientStateFile, readOffset, (unsigned char *)parseClient->lastPushHash, sizeof(parseClient->lastPushHash));
+    status = sl_FsRead(clientStateFile, readOffset, (unsigned char *)parseClient->lastPushTime, sizeof(parseClient->lastPushTime));
     if (status < 0) {
         sl_FsClose(clientStateFile, 0, 0, 0);
         return status;
     }
 #ifdef CLIENT_DEBUG
-    DEBUG_PRINT("[Parse] Last push hash: %s\r\n", parseClient->lastPushHash);
+    DEBUG_PRINT("[Parse] Last push time: %s\r\n", parseClient->lastPushTime);
 #endif /* CLIENT_DEBUG */
 
     sl_FsClose(clientStateFile, 0, 0, 0);
@@ -145,10 +145,10 @@ short saveClientState(ParseClientInternal *parseClient) {
     }
 
 #ifdef CLIENT_DEBUG
-    DEBUG_PRINT("[Parse] Last push hash: %s\r\n", parseClient->lastPushHash);
+    DEBUG_PRINT("[Parse] Last push time: %s\r\n", parseClient->lastPushTime);
 #endif /* CLIENT_DEBUG */
     writeOffset = writeOffset + status;
-    status = sl_FsWrite(clientStateFile, writeOffset, (unsigned char *)parseClient->lastPushHash, sizeof(parseClient->lastPushHash));
+    status = sl_FsWrite(clientStateFile, writeOffset, (unsigned char *)parseClient->lastPushTime, sizeof(parseClient->lastPushTime));
     if (status < 0) {
 #ifdef CLIENT_DEBUG
         if (status == SL_FS_ERR_NO_AVAILABLE_BLOCKS) {

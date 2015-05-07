@@ -68,7 +68,7 @@ extern "C"
 
 extern char g_osVersion[OS_VERSION_MAX_LEN+1];
 
-#define PUSH_HASH_MAX_LEN 40
+#define PUSH_TIME_MAX_LEN 40
 
 // 10 minutes keep alive
 #define PUSH_KEEP_ALIVE 10 * 60 * 1000
@@ -90,7 +90,7 @@ typedef struct _ParseClientInternal {
     parsePushCallback callback;
     int socketHandle;
     int nFailedPing;
-    char lastPushHash[PUSH_HASH_MAX_LEN + 1];
+    char lastPushTime[PUSH_TIME_MAX_LEN + 1];
 } ParseClientInternal;
 
 /* cc3200_certificate.c */
