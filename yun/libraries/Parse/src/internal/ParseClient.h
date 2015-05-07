@@ -35,6 +35,9 @@
 
 /*! \class ParseClient
  *  \brief Class responsible for Parse connection
+ *
+ *  NOTE: A global ParseClient object with name "Parse" is defined in SDK,
+ *  use it in your sketch instead of defining your own ParseClient object.
  */
 class ParseClient {
 private:
