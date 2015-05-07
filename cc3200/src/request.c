@@ -49,7 +49,7 @@ int buildRequestHeaders(ParseClientInternal *parseClient, const char *host, cons
     int status = 0;
 
     int currentPosition = 0;
-    int currentSize = sizeof(dataBuffer) - currentPosition;
+    int currentSize = sizeof(dataBuffer) - currentPosition - 1;
 
     int isGetRequest = strncasecmp(httpVerb, "GET", 3) == 0;
     int hasBody = (httpRequestBody != NULL) && (strlen(httpRequestBody) > 0);
@@ -57,6 +57,8 @@ int buildRequestHeaders(ParseClientInternal *parseClient, const char *host, cons
     if (isGetRequest != FALSE) {
         hasBody = FALSE;
     }
+
+    memset(dataBuffer, 0, sizeof(dataBuffer));
 
     if (isGetRequest != FALSE) {
         status = beginHttpGetRequest(dataBuffer + currentPosition, currentSize, host, httpVerb, httpRequestBody);
@@ -150,7 +152,7 @@ int buildRequestHeaders(ParseClientInternal *parseClient, const char *host, cons
     if (status >= 0) {
         currentPosition += status;
         currentSize -= status;
-        dataBuffer[currentPosition] = 0;
+    	dataBuffer[currentPosition] = 0;
     }
 
     return (status < 0) ? status : currentPosition;

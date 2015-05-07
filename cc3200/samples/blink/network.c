@@ -31,6 +31,8 @@ SlSecParams_t g_SecParams;
 
 #define CONNECTION_TIMEOUT_COUNT 5000
 
+#define MIN(a, b) ((a > b) ? b : a)
+
 void printVersionInfo() {
     // get the host driver version information
     SlVersionFull ver;
@@ -117,10 +119,12 @@ void startConfigurationMode() {
     sl_NetCfgGet(SL_MAC_ADDRESS_GET, NULL, &macAddressLen, (_u8 *)macAddressVal);
 
     char ssid[MAXIMAL_SSID_LENGTH + 1];
-    sprintf(ssid, "%s-%s-%02X%02X%02X", "TL04", "fbdr000001a",
-            macAddressVal[SL_MAC_ADDR_LEN-3],
-            macAddressVal[SL_MAC_ADDR_LEN-2],
-            macAddressVal[SL_MAC_ADDR_LEN-1]);
+    snprintf(ssid,
+             sizeof(ssid)-1,
+             "%s-%s-%02X%02X%02X", "TL04", "fbdr000001a",
+             macAddressVal[SL_MAC_ADDR_LEN-3],
+             macAddressVal[SL_MAC_ADDR_LEN-2],
+             macAddressVal[SL_MAC_ADDR_LEN-1]);
     int ssidLen = strlen(ssid);
 
     status = sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_SSID, ssidLen, (unsigned char*)ssid);
@@ -281,24 +285,27 @@ void SimpleLinkHttpServerCallback(SlHttpServerEvent_t *httpServerEvent, SlHttpSe
         {
             int tokenNameLen = httpServerEvent->EventData.httpPostData.token_name.len;
             char tokenName[256];
-            memcpy(tokenName, httpServerEvent->EventData.httpPostData.token_name.data, tokenNameLen);
+            tokenNameLen = MIN(tokenNameLen, sizeof(tokenName)-1);
+            strncpy(tokenName, (const char *)(httpServerEvent->EventData.httpPostData.token_name.data), tokenNameLen);
             tokenName[tokenNameLen] = 0;
 
             int tokenValueLen = httpServerEvent->EventData.httpPostData.token_value.len;
             char tokenValue[256];
-            memcpy(tokenValue, httpServerEvent->EventData.httpPostData.token_value.data, tokenValueLen);
+            tokenValueLen = MIN(tokenValueLen, sizeof(tokenValue)-1);
+            strncpy(tokenValue, (const char *)(httpServerEvent->EventData.httpPostData.token_value.data), tokenValueLen);
             tokenValue[tokenValueLen] = 0;
 
             UART_PRINT("[Blink] Parameter name            : %s\r\n", tokenName);
             UART_PRINT("        Parameter value           : %s\r\n", tokenValue);
 
-            if ((0 == memcmp(tokenName, "__SL_P_USZ", tokenNameLen))
-                    && (0 == memcmp( tokenValue, "Add", tokenValueLen))) {
+            if ((0 == strcmp(tokenName, "__SL_P_USZ"))
+                    && (0 == strcmp(tokenValue, "Add"))) {
                 g_ProvisioningDone = 1;
-            } else if (0 == memcmp(tokenName, "__SL_P_USA", tokenNameLen)) {
-                memcpy(g_WlanSSID, tokenValue, tokenValueLen);
+            } else if (0 == strcmp(tokenName, "__SL_P_USA")) {
+                tokenValueLen = MIN(tokenValueLen, sizeof(g_WlanSSID)-1);
+                strncpy((char *)g_WlanSSID, tokenValue, tokenValueLen);
                 g_WlanSSID[tokenValueLen] = 0;
-            } else if (0 == memcmp(tokenName, "__SL_P_USB", tokenNameLen)) {
+            } else if (0 == strcmp(tokenName, "__SL_P_USB")) {
                 if (tokenValue[0] == '0') {
                     g_SecParams.Type = SL_SEC_TYPE_OPEN;
                 } else if (tokenValue[0] == '1') {
@@ -308,25 +315,31 @@ void SimpleLinkHttpServerCallback(SlHttpServerEvent_t *httpServerEvent, SlHttpSe
                 } else {
                     g_SecParams.Type = SL_SEC_TYPE_OPEN;
                 }
-            } else if (0 == memcmp(tokenName, "__SL_P_USC", tokenNameLen)) {
-                memcpy(g_WlanSecurityKey, tokenValue, tokenValueLen);
+            } else if (0 == strcmp(tokenName, "__SL_P_USC")) {
+                tokenValueLen = MIN(tokenValueLen, sizeof(g_WlanSecurityKey)-1);
+                strncpy((char *)g_WlanSecurityKey, tokenValue, tokenValueLen);
                 g_WlanSecurityKey[tokenValueLen] = 0;
                 g_SecParams.Key = g_WlanSecurityKey;
                 g_SecParams.KeyLen = tokenValueLen;
-            } else if (0 == memcmp(tokenName, "__SL_P_USD", tokenNameLen)) {
-                memcpy(g_ApplicationID, tokenValue, tokenValueLen);
+            } else if (0 == strcmp(tokenName, "__SL_P_USD")) {
+                tokenValueLen = MIN(tokenValueLen, sizeof(g_ApplicationID)-1);
+                strncpy(g_ApplicationID, tokenValue, tokenValueLen);
                 g_ApplicationID[tokenValueLen] = 0;
-            } else if (0 == memcmp(tokenName, "__SL_P_USE", tokenNameLen)) {
-                memcpy(g_ClientKey, tokenValue, tokenValueLen);
+            } else if (0 == strcmp(tokenName, "__SL_P_USE")) {
+                tokenValueLen = MIN(tokenValueLen, sizeof(g_ClientKey)-1);
+                strncpy(g_ClientKey, tokenValue, tokenValueLen);
                 g_ClientKey[tokenValueLen] = 0;
-            } else if (0 == memcmp(tokenName, "__SL_P_USF", tokenNameLen)) {
-                memcpy(g_InstallationID, tokenValue, tokenValueLen);
+            } else if (0 == strcmp(tokenName, "__SL_P_USF")) {
+                tokenValueLen = MIN(tokenValueLen, sizeof(g_InstallationID)-1);
+                strncpy(g_InstallationID, tokenValue, tokenValueLen);
                 g_InstallationID[tokenValueLen] = 0;
-            } else if (0 == memcmp(tokenName, "__SL_P_USG", tokenNameLen)) {
-                memcpy(g_SessionToken, tokenValue, tokenValueLen);
+            } else if (0 == strcmp(tokenName, "__SL_P_USG")) {
+                tokenValueLen = MIN(tokenValueLen, sizeof(g_SessionToken)-1);
+                strncpy(g_SessionToken, tokenValue, tokenValueLen);
                 g_SessionToken[tokenValueLen] = 0;
-            } else if (0 == memcmp(tokenName, "__SL_P_USH", tokenNameLen)) {
-                memcpy(g_DeviceName, tokenValue, tokenValueLen);
+            } else if (0 == strcmp(tokenName, "__SL_P_USH")) {
+                tokenValueLen = MIN(tokenValueLen, sizeof(g_DeviceName)-1);
+                strncpy(g_DeviceName, tokenValue, tokenValueLen);
                 g_DeviceName[tokenValueLen] = 0;
             }
         }

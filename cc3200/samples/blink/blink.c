@@ -50,14 +50,14 @@ void blinkGetInstallationObjectId() {
 
     // Encode the query parameter value
     char content[150];
-    sprintf(content, "{\"installationId\": \"%s\"}", g_InstallationID);
+    snprintf(content, sizeof(content)-1, "{\"installationId\": \"%s\"}", g_InstallationID);
 
     char encodedContent[150];
     memset(encodedContent, 0, sizeof(encodedContent));
     urlEncode(content, encodedContent);
 
     memset(content, 0, sizeof(content));
-    sprintf(content, "where=%s", encodedContent);
+    snprintf(content, sizeof(content)-1, "where=%s", encodedContent);
 
     parseSendRequest((ParseClient)parseClient, "GET", "/1/installations", content, blinkGetInstallationObjectIdByIdCallback);
 }
@@ -79,14 +79,14 @@ void blinkGetModelObjectId() {
 
     // Encode the query parameter value
     char content[150];
-    sprintf(content, "{\"appName\": \"fbdr000001a\"}");
+    snprintf(content, sizeof(content)-1, "{\"appName\": \"fbdr000001a\"}");
 
     char encodedContent[150];
     memset(encodedContent, 0, sizeof(encodedContent));
     urlEncode(content, encodedContent);
 
     memset(content, 0, sizeof(content));
-    sprintf(content, "where=%s", encodedContent);
+    snprintf(content, sizeof(content)-1, "where=%s", encodedContent);
 
     parseSendRequest((ParseClient)parseClient, "GET", "/1/classes/Model", content, blinkGetModelObjectIdByNameCallback);
 }
@@ -120,10 +120,10 @@ void blinkUpdateInstallation() {
 
         char path[40];
         memset(path, 0, sizeof(path));
-        sprintf(path, "/1/installations/%s", installationObjectId);
+        snprintf(path, sizeof(path)-1, "/1/installations/%s", installationObjectId);
 
         memset(objectJson, 0, sizeof(objectJson));
-        sprintf(objectJson, "{\"deviceName\": \"%s\", \"deviceSubtype\": \"fluffy\", \"model\": {\"__type\":\"Pointer\",\"className\":\"Model\",\"objectId\":\"%s\"}, \"owner\": {\"__type\":\"Pointer\",\"className\":\"_User\",\"objectId\":\"%s\"}}",
+        snprintf(objectJson, sizeof(objectJson)-1, "{\"deviceName\": \"%s\", \"deviceSubtype\": \"fluffy\", \"model\": {\"__type\":\"Pointer\",\"className\":\"Model\",\"objectId\":\"%s\"}, \"owner\": {\"__type\":\"Pointer\",\"className\":\"_User\",\"objectId\":\"%s\"}}",
                 g_DeviceName, modelObjectId, userObjectId);
 
         parseSendRequest(parseClient, "PUT", path, objectJson, blinkRequestCallback);
@@ -153,7 +153,7 @@ void saveLedState() {
     UART_PRINT("[Blink] Saving LED state.\r\n");
 
     // TODO: Use parseGetInstallationId() instead of installationObjectId
-    sprintf(objectJson, "{\"installationId\": \"%s\", \"value\": {\"state\": \"%s\"}, \"alarm\": true, \"ACL\":{ \"%s\": { \"read\": true, \"write\": true}}}",
+    snprintf(objectJson, sizeof(objectJson)-1, "{\"installationId\": \"%s\", \"value\": {\"state\": \"%s\"}, \"alarm\": true, \"ACL\":{ \"%s\": { \"read\": true, \"write\": true}}}",
             installationObjectId, getLedState(), userObjectId);
     parseSendRequest(parseClient, "POST", "/1/classes/Event", objectJson, blinkRequestCallback);
 }

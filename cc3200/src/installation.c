@@ -99,7 +99,7 @@ void createInstallation(ParseClientInternal *parseClient) {
         // Send installation create request and get the object id from the response.
         // If the response is a failure, set the instalaltionObjectId back to empty
         char content[120];
-        sprintf(content, "{\"installationId\": \"%s\", \"deviceType\": \"embedded\", \"parseVersion\": \"1.0.0\"}", parseClient->installationId);
+        snprintf(content, sizeof(content)-1, "{\"installationId\": \"%s\", \"deviceType\": \"embedded\", \"parseVersion\": \"1.0.0\"}", parseClient->installationId);
 
         parseSendRequestInternal((ParseClient)parseClient, "POST", "/1/installations", content, createInstallationCallback, FALSE);
     }
