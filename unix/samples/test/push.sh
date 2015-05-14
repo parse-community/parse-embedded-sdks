@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 COUNTER=0
 while [  $COUNTER -lt 10 ]; do
   curl -X POST \

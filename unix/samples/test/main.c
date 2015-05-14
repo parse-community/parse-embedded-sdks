@@ -26,7 +26,7 @@
 #include <parse.h>
 #include <time.h>
 
-#include "json.h"
+#include "simplejson.h"
 
 int totalTests = 0;
 int successfullTests = 0;
@@ -95,8 +95,8 @@ static void pushCallback(ParseClient client, int error, const char *buffer) {
         char id[16] = {0};
         char orig[16] = {0};
         snprintf(orig, sizeof(orig), "%ld", run);
-        if (simpleJson(buffer, "data", data, sizeof(data))) {
-            if (simpleJson(data, "id", id, sizeof(id))) {
+        if (simpleJsonProcessor(buffer, "data", data, sizeof(data))) {
+            if (simpleJsonProcessor(data, "id", id, sizeof(id))) {
                 if (strncmp(id, orig, sizeof(id)) == 0) {
                     pushCounter++;
                 }
@@ -120,7 +120,6 @@ int main(int argc, char *argv[]) {
 
 
     // TEST INITIALIZATION
-
     ParseClient client = parseInitialize(YOUR_APP_IP, YOUR_CLIENT_KEY);
     logResults(client != NULL, 1, "parseInitialize call", "failed to start parse");
 
@@ -144,7 +143,7 @@ int main(int argc, char *argv[]) {
     parseSendRequest(client, "POST", classPathOne, "{\"test\":\"object1\", \"value\":1}", callback);   
     logResults(cachedRunResult != NULL, 0, "create test object 1", "creating object failed");
     memset(objectId, 0, sizeof(objectId));
-    logResults(simpleJson(cachedRunResult, "objectId", objectId, sizeof(objectId)), 0, "object 1 created", "could not create an object");
+    logResults(simpleJsonProcessor(cachedRunResult, "objectId", objectId, sizeof(objectId)), 0, "object 1 created", "could not create an object");
 
     clearCachedResults();
 
@@ -158,7 +157,7 @@ int main(int argc, char *argv[]) {
     parseSendRequest(client, "POST", classPathOne, "{\"test\":\"object1\", \"value\":2}", callback);   
     logResults(cachedRunResult != NULL, 0, "create test object 2", "creating object failed");
     memset(objectId, 0, sizeof(objectId));
-    logResults(simpleJson(cachedRunResult, "objectId", objectId, sizeof(objectId)), 0, "object 2 created", "could not create an object");
+    logResults(simpleJsonProcessor(cachedRunResult, "objectId", objectId, sizeof(objectId)), 0, "object 2 created", "could not create an object");
     
     clearCachedResults();
 
@@ -172,7 +171,7 @@ int main(int argc, char *argv[]) {
     parseSendRequest(client, "POST", classPathOne, "{\"test\":\"object1\", \"value\":3}", callback);   
     logResults(cachedRunResult != NULL, 0, "create test object 3", "creating object failed");
     char objectIdKeepAround[11] = {0};
-    logResults(simpleJson(cachedRunResult, "objectId", objectIdKeepAround, sizeof(objectIdKeepAround)), 0, "object 3 created", "could not create an object");
+    logResults(simpleJsonProcessor(cachedRunResult, "objectId", objectIdKeepAround, sizeof(objectIdKeepAround)), 0, "object 3 created", "could not create an object");
 
     clearCachedResults();
 
@@ -186,7 +185,7 @@ int main(int argc, char *argv[]) {
     parseSendRequest(client, "POST", classPathOne, "{\"test\":\"object1\", \"value\":2}", callback);   
     logResults(cachedRunResult != NULL, 0, "create test object 4", "creating object failed");
     memset(objectId, 0, sizeof(objectId));
-    logResults(simpleJson(cachedRunResult, "objectId", objectId, sizeof(objectId)), 0, "object 4 created", "could not create an object");
+    logResults(simpleJsonProcessor(cachedRunResult, "objectId", objectId, sizeof(objectId)), 0, "object 4 created", "could not create an object");
     
     clearCachedResults();
 
