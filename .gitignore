@@ -55,6 +55,7 @@ RemoteSystemsTempFiles/
 **/unix/src/*.lo
 **/unix/samples/simple_parse_loop/simple_parse_loop
 **/unix/samples/simple_custom_loop/simple_custom_loop
+**/unix/samples/test/parse_test
 **/unix/yun/Makefile
 **/unix/yun/Makefile.in
 **/unix/yun/parse_push
