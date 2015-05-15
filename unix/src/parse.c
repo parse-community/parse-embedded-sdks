@@ -623,18 +623,29 @@ static void parseSendRequestInternal(
         if (callback != NULL) callback(client, result, 0, NULL);
         return;
     }
-
+#if LIBCURL_VERSION_NUM >= 0x072000
     result = curl_easy_setopt(curl, CURLOPT_XFERINFODATA, (void*)((uintptr_t)secondsSinceBoot()));
     if (result != CURLE_OK) {
         if (callback != NULL) callback(client, result, 0, NULL);
         return;
     }
-
     result = curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, parseProgressInternal);
     if (result != CURLE_OK) {
         if (callback != NULL) callback(client, result, 0, NULL);
         return;
     }
+#else
+    result = curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, (void*)((uintptr_t)secondsSinceBoot()));
+    if (result != CURLE_OK) {
+        if (callback != NULL) callback(client, result, 0, NULL);
+        return;
+    }
+    result = curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, parseProgressInternal);
+    if (result != CURLE_OK) {
+        if (callback != NULL) callback(client, result, 0, NULL);
+        return;
+    }
+#endif
 
     result = curl_easy_perform(curl);
     if (result != CURLE_OK) {
