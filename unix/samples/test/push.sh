@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 COUNTER=0
 while [  $COUNTER -lt 10 ]; do
   curl -X POST \
@@ -9,9 +8,9 @@ while [  $COUNTER -lt 10 ]; do
     -H "Content-Type: application/json" \
     -d "{
           \"where\": {
-            \"deviceType\": \"embedded\"
+            \"installationId\": \"$1\"
           },
-          \"data\": {\"id\": \"$1\"}
+          \"data\": {\"id\": \"$2\"}
         }" \
     https://api.parse.com/1/push
   let COUNTER=COUNTER+1 
