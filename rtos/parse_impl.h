@@ -64,17 +64,13 @@ extern "C"
 #include <parse.h>
 #include <simplejson.h>
 
-#define OS_VERSION_MAX_LEN 19
-
-extern char g_osVersion[OS_VERSION_MAX_LEN+1];
+// Platform-specific defines
+#include <platform_impl.h>
 
 #define PUSH_TIME_MAX_LEN 40
 
 // 10 minutes keep alive
 #define PUSH_KEEP_ALIVE 10 * 60 * 1000
-
-// Root CA file name
-#define SL_SSL_CA_CERT_FILE_NAME "/parse/DigiCertHighAssuranceEVRootCA.der"
 
 // Client state file, one file per app id used
 #define CLIENT_STATE_FILENAME "/parse/%s"
@@ -91,30 +87,18 @@ typedef struct _ParseClientInternal {
     int socketHandle;
     int nFailedPing;
     char lastPushTime[PUSH_TIME_MAX_LEN + 1];
+    char osVersion[OS_VERSION_MAX_LEN+1];
+    char deviceClientVersion[CLIENT_VERSION_MAX_LEN+1];
 } ParseClientInternal;
 
-/* cc3200_certificate.c */
-void ensureCertificateFile();
 
-/* cc3200_client_state.c */
-short loadClientState(ParseClientInternal *parseClient);
-short saveClientState(ParseClientInternal *parseClient);
 
-/* cc3200_debug.c */
-void debugPrint(const char *buffer);
-int debugPrintf(const char *format, ...);
+// SDK functions common for all platforms, implementations are in /rtos folder
+// and rely on standard C, Posix/Unix libraries only, or platform-specific
+// SDK functions implementations
 
-/* cc3200_utils.c */
-int isPingTime();
-void updateLastPingTime();
-void fetchDeviceOSVersion();
-void createNewInstallationId(ParseClientInternal *parseClient);
-
-/* cc3200_socket.c */
-short socketSslConnect(const char *host, unsigned short port);
-short socketRead(short socketHandle, char *buffer, unsigned int receiveBufferSize, unsigned int timeoutMilliseconds);
-short socketWrite(short socketHandle, const char *sendBuffer, unsigned int sendBufferSize);
-short socketClose(short socketHandle);
+/* certificate.c */
+void ensureCertificate();
 
 /* http.c */
 int beginHttpRequest(char *httpRequest, unsigned int httpRequestSize, const char *host, const char *httpVerb);
@@ -133,6 +117,34 @@ ParseClientInternal *getInternalClient(ParseClient client);
 
 /* request.c */
 void parseSendRequestInternal(ParseClient client, const char *httpVerb, const char *httpPath, const char *httpRequestBody, parseRequestCallback callback, int addInstallationHeader);
+
+
+
+// SDK functions specific for particular platform, implementations are in /<platform>/src folder
+// and rely on platform-specific APIs
+
+/* certificate_file.c */
+void ensureCertificateFile(const unsigned char *certificate, unsigned int certificateLen);
+
+/* client_state.c */
+short loadClientState(ParseClientInternal *parseClient);
+short saveClientState(ParseClientInternal *parseClient);
+
+/* debug.c */
+void debugPrint(const char *buffer);
+int debugPrintf(const char *format, ...);
+
+/* socket.c */
+short socketSslConnect(const char *host, unsigned short port);
+short socketRead(short socketHandle, char *buffer, unsigned int receiveBufferSize, unsigned int timeoutMilliseconds);
+short socketWrite(short socketHandle, const char *sendBuffer, unsigned int sendBufferSize);
+short socketClose(short socketHandle);
+
+/* utils.c */
+int isPingTime();
+void updateLastPingTime();
+void fetchDeviceOSVersion(char *buf, size_t bufLen);
+void createNewInstallationId(ParseClientInternal *parseClient);
 
 #ifdef __cplusplus
 }

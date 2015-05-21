@@ -26,6 +26,46 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>certificate.c</name>
+			<type>1</type>
+			<locationURI>PARSE_SDK_ROOT/rtos/certificate.c</locationURI>
+		</link>
+		<link>
+			<name>http.c</name>
+			<type>1</type>
+			<locationURI>PARSE_SDK_ROOT/rtos/http.c</locationURI>
+		</link>
+		<link>
+			<name>installation.c</name>
+			<type>1</type>
+			<locationURI>PARSE_SDK_ROOT/rtos/installation.c</locationURI>
+		</link>
+		<link>
+			<name>parse_impl.c</name>
+			<type>1</type>
+			<locationURI>PARSE_SDK_ROOT/rtos/parse_impl.c</locationURI>
+		</link>
+		<link>
+			<name>parse_impl.h</name>
+			<type>1</type>
+			<locationURI>PARSE_SDK_ROOT/rtos/parse_impl.h</locationURI>
+		</link>
+		<link>
+			<name>push.c</name>
+			<type>1</type>
+			<locationURI>PARSE_SDK_ROOT/rtos/push.c</locationURI>
+		</link>
+		<link>
+			<name>request.c</name>
+			<type>1</type>
+			<locationURI>PARSE_SDK_ROOT/rtos/request.c</locationURI>
+		</link>
+		<link>
+			<name>session.c</name>
+			<type>1</type>
+			<locationURI>PARSE_SDK_ROOT/rtos/session.c</locationURI>
+		</link>
+		<link>
 			<name>simplejson.c</name>
 			<type>1</type>
 			<locationURI>PARSE_SDK_ROOT/common/simplejson.c</locationURI>

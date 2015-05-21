@@ -22,7 +22,7 @@
 #include <simplelink.h>
 #include <socket.h>
 
-#include "parse_impl.h"
+#include <parse_impl.h>
 
 #define CONNECT_TIMEOUT_MICROSECONDS 5 * 1000 * 1000
 #define READ_SMALL_TIMEOUT_MICROSECONDS 10 * 1000
@@ -66,8 +66,8 @@ short socketSslConnect(const char *host, unsigned short port) {
     }
 
     if (status >= 0) {
-        ensureCertificateFile();
-        status = sl_SetSockOpt(socketHandle, SL_SOL_SOCKET, SL_SO_SECURE_FILES_CA_FILE_NAME, SL_SSL_CA_CERT_FILE_NAME, strlen(SL_SSL_CA_CERT_FILE_NAME));
+        ensureCertificate();
+        status = setsockopt(socketHandle, SOL_SOCKET, SL_SO_SECURE_FILES_CA_FILE_NAME, SSL_CA_CERT_FILE_NAME, strlen(SSL_CA_CERT_FILE_NAME));
     }
 
     if (status >= 0) {

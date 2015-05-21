@@ -42,8 +42,10 @@
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.DIAG_WRAP.1900016121" name="Wrap diagnostic messages (--diag_wrap)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.DIAG_WRAP" value="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.DIAG_WRAP.off" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.INCLUDE_PATH.245419243" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_ROOT}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PARSE_SDK_ROOT}/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PARSE_SDK_ROOT}/common&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PARSE_SDK_ROOT}/rtos&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SDK_ROOT}/inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SDK_ROOT}/simplelink/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SDK_ROOT}/oslib&quot;"/>
@@ -106,8 +108,10 @@
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.DIAG_WRAP.25490248" name="Wrap diagnostic messages (--diag_wrap)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.DIAG_WRAP" value="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.DIAG_WRAP.off" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.INCLUDE_PATH.2135435920" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.1.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_ROOT}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PARSE_SDK_ROOT}/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PARSE_SDK_ROOT}/common&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PARSE_SDK_ROOT}/rtos&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SDK_ROOT}/inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SDK_ROOT}/simplelink/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${SDK_ROOT}/oslib&quot;"/>

@@ -19,11 +19,7 @@
  *
  */
 
-#include <simplelink.h>
-
-#include <stdio.h>
-
-#include "parse_impl.h"
+#include <parse_impl.h>
 
 /** Generated from DigiCertHighAssuranceEVRootCA.der using the xxd tool
  *      xxd -i DigiCertHighAssuranceEVRootCA.der
@@ -121,56 +117,6 @@ static unsigned char DigiCertHighAssuranceEVRootCA_der[] = {
 };
 unsigned int DigiCertHighAssuranceEVRootCA_der_len = 969;
 
-void ensureCertificateFile() {
-    long certificateFile = -1;
-
-    short status = sl_FsOpen((unsigned char *)SL_SSL_CA_CERT_FILE_NAME, FS_MODE_OPEN_READ, NULL, &certificateFile);
-    if (status < 0) {
-#ifdef SSL_DEBUG
-        DEBUG_PRINT("[Parse] Creating certificate file\r\n");
-#endif /* SSL_DEBUG */
-
-        sl_FsClose(certificateFile, 0, 0, 0);
-        certificateFile = -1;
-
-        status = sl_FsOpen((unsigned char *)SL_SSL_CA_CERT_FILE_NAME,
-                FS_MODE_OPEN_CREATE(65536, _FS_FILE_OPEN_FLAG_COMMIT | _FS_FILE_PUBLIC_WRITE),
-                NULL, &certificateFile);
-        if (status < 0) {
-#ifdef SSL_DEBUG
-            DEBUG_PRINT("[Parse] Error creating certificate file: %d\r\n", status);
-            if (status == SL_FS_ERR_NO_AVAILABLE_BLOCKS) {
-                 DEBUG_PRINT("[Parse] No available blocks. Need to flash your device file system...\r\n");
-            }
-#endif /* SSL_DEBUG */
-            return;
-        }
-
-        sl_FsClose(certificateFile, 0, 0, 0);
-        certificateFile = -1;
-
-        status = sl_FsOpen((unsigned char *)SL_SSL_CA_CERT_FILE_NAME, FS_MODE_OPEN_WRITE, NULL, &certificateFile);
-        if (status < 0) {
-#ifdef SSL_DEBUG
-            DEBUG_PRINT("[Parse] Error creating certificate file: %d\r\n", status);
-            if (status == SL_FS_ERR_NO_AVAILABLE_BLOCKS) {
-                 DEBUG_PRINT("[Parse] No available blocks. Need to flash your device file system...\r\n");
-            }
-#endif /* SSL_DEBUG */
-            sl_FsClose(certificateFile, 0, 0, 0);
-            return;
-        }
-
-        status = sl_FsWrite(certificateFile, 0, DigiCertHighAssuranceEVRootCA_der, DigiCertHighAssuranceEVRootCA_der_len);
-        if (status < 0) {
-#ifdef SSL_DEBUG
-            DEBUG_PRINT("[Parse] Error creating certificate file: %d\r\n", status);
-            if (status == SL_FS_ERR_NO_AVAILABLE_BLOCKS) {
-                 DEBUG_PRINT("[Parse] No available blocks. Need to flash your device file system...\r\n");
-            }
-#endif /* SSL_DEBUG */
-        }
-    }
-
-    sl_FsClose(certificateFile, 0, 0, 0);
+void ensureCertificate() {
+	ensureCertificateFile(DigiCertHighAssuranceEVRootCA_der,  DigiCertHighAssuranceEVRootCA_der_len);
 }

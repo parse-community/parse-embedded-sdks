@@ -25,9 +25,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "parse_impl.h"
-
-char g_osVersion[OS_VERSION_MAX_LEN+1] = {0};
+#include <parse_impl.h>
 
 static SlDateTime_t lastDateTime = {0};
 
@@ -62,7 +60,7 @@ void updateLastPingTime() {
     getDeviceTimeDate(&lastDateTime);
 }
 
-void fetchDeviceOSVersion() {
+void fetchDeviceOSVersion(char *buf, size_t bufLen) {
     int status = -1;
 
     unsigned char configOpt = SL_DEVICE_GENERAL_VERSION;
@@ -73,7 +71,7 @@ void fetchDeviceOSVersion() {
     status = sl_DevGet(SL_DEVICE_GENERAL_CONFIGURATION, &configOpt, &configLen, (unsigned char *)(&ver));
 
     if(status >= 0) {
-        snprintf(g_osVersion, sizeof(g_osVersion)-1, "%lu.%lu.%lu.%lu", ver.NwpVersion[0], ver.NwpVersion[1], ver.NwpVersion[2], ver.NwpVersion[3]);
+        snprintf(buf, bufLen, "%lu.%lu.%lu.%lu", ver.NwpVersion[0], ver.NwpVersion[1], ver.NwpVersion[2], ver.NwpVersion[3]);
     }
 }
 
