@@ -44,19 +44,21 @@ ${BINDIR}:
 # Rules for building the Simplelink library with os support.
 #
 ${TARGET}: \
+  ${OBJDIR}/certificate_file.o \
+  ${OBJDIR}/client_state.o \
+  ${OBJDIR}/debug.o \
+  ${OBJDIR}/socket.o \
+  ${OBJDIR}/utils.o \
+  \
+  ${OBJDIR}/certificate.o \
   ${OBJDIR}/http.o \
   ${OBJDIR}/installation.o \
   ${OBJDIR}/parse_impl.o \
   ${OBJDIR}/push.o \
   ${OBJDIR}/request.o \
   ${OBJDIR}/session.o \
-  ${OBJDIR}/simplejson.o \
   \
-  ${OBJDIR}/cc3200_certificate.o \
-  ${OBJDIR}/cc3200_client_state.o \
-  ${OBJDIR}/cc3200_debug.o \
-  ${OBJDIR}/cc3200_socket.o \
-  ${OBJDIR}/cc3200_utils.o \
+  ${OBJDIR}/simplejson.o \
 
 
 #
