@@ -262,7 +262,7 @@ int main(int argc, char *argv[]) {
     int loopCount = 20;
 
 
-    printf("[!!!!!!!] Run ./push.sh %ld\n", run);
+    printf("[!!!!!!!] Run ./push.sh %s %ld\n", id, run);
 
     while(loopCount--) {
         struct timeval tv;
