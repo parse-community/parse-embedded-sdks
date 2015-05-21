@@ -21,10 +21,12 @@ PARSE_SDK_ROOT:=$(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 # Where to find header files that do not live in the source directory.
 #
 IPATH+=$(PARSE_SDK_ROOT)/include
+IPATH+=$(PARSE_SDK_ROOT)/rtos
 IPATH+=$(PARSE_SDK_ROOT)/common
 
 
 #
 # Where to find source files that do not live in this directory.
 #
+VPATH+=$(PARSE_SDK_ROOT)/rtos
 VPATH+=$(PARSE_SDK_ROOT)/common

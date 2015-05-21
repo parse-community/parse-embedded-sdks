@@ -24,7 +24,7 @@
 #include <string.h>
 #include <strings.h>
 
-#include "parse_impl.h"
+#include <parse_impl.h>
 
 void associateSessionWithInstallation(ParseClientInternal *parseClient) {
     // We can associate the session only if we have a valid installation

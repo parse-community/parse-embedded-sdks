@@ -23,15 +23,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "parse_impl.h"
+#include <parse_impl.h>
 
 ParseClient parseInitialize(const char *applicationId, const char *clientKey) {
 #ifdef CLIENT_DEBUG
     DEBUG_PRINT("[Parse] Initializing new client.\r\n");
 #endif /* CLIENT_DEBUG */
-
-    // Do any one-time initialization of the SDK
-    fetchDeviceOSVersion();
 
     // Do any one-time intialization of the new client
     ParseClientInternal *parseClient = (ParseClientInternal *)malloc(sizeof(ParseClientInternal));
@@ -57,6 +54,12 @@ ParseClient parseInitialize(const char *applicationId, const char *clientKey) {
 		parseClient->callback = NULL;
 		parseClient->nFailedPing = 0;
 		memset(parseClient->lastPushTime, 0, sizeof(parseClient->lastPushTime));
+
+		memset(parseClient->osVersion, 0, sizeof(parseClient->osVersion));
+		memset(parseClient->deviceClientVersion, 0, sizeof(parseClient->deviceClientVersion));
+
+		fetchDeviceOSVersion(parseClient->osVersion, sizeof(parseClient->osVersion)-1);
+		strncpy(parseClient->deviceClientVersion, CLIENT_VERSION, CLIENT_VERSION_MAX_LEN);
 
 		loadClientState(parseClient);
 #ifdef CLIENT_DEBUG

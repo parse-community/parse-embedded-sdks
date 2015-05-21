@@ -24,9 +24,7 @@
 #include <string.h>
 #include <strings.h>
 
-#include "parse_impl.h"
-
-const char g_deviceClientVersion[] = "c-ti-cc3200-rtos-1.0.0";
+#include <parse_impl.h>
 
 static char parseServer[] = "api.parse.com";
 unsigned short sshPort = 443;
@@ -75,19 +73,19 @@ int buildRequestHeaders(ParseClientInternal *parseClient, const char *host, cons
     if (status >= 0) {
         currentPosition += status;
         currentSize -= status;
-        status = addHttpRequestHeader(dataBuffer + currentPosition, currentSize, "User-Agent", g_deviceClientVersion);
+        status = addHttpRequestHeader(dataBuffer + currentPosition, currentSize, "User-Agent", parseClient->deviceClientVersion);
     }
 
     if (status >= 0) {
         currentPosition += status;
         currentSize -= status;
-        status = addHttpRequestHeader(dataBuffer + currentPosition, currentSize, "X-Parse-OS-Version", g_osVersion);
+        status = addHttpRequestHeader(dataBuffer + currentPosition, currentSize, "X-Parse-OS-Version", parseClient->osVersion);
     }
 
     if (status >= 0) {
         currentPosition += status;
         currentSize -= status;
-        status = addHttpRequestHeader(dataBuffer + currentPosition, currentSize, "X-Parse-Client-Version", g_deviceClientVersion);
+        status = addHttpRequestHeader(dataBuffer + currentPosition, currentSize, "X-Parse-Client-Version", parseClient->deviceClientVersion);
     }
 
     if (status >= 0) {

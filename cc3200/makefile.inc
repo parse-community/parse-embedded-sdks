@@ -33,6 +33,7 @@ CFLAGS+=-Wall
 #
 # Where to find header files that do not live in the source directory.
 #
+IPATH+=$(PARSE_CC3200_SDK_ROOT)/src
 IPATH+=${CC3200_SDK_ROOT}/simplelink/include
 IPATH+=${CC3200_SDK_ROOT}/driverlib
 IPATH+=${CC3200_SDK_ROOT}/oslib
