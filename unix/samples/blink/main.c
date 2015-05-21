@@ -96,7 +96,7 @@ static void myPushCallback(ParseClient client, int error, const char *buffer) {
 
 static void saveCurrentDeviceState(ParseClient client, int device_state) {
     char objectJson[1024];
-    sprintf(objectJson, "{\"installationId\": \"%s\", \"value\": {\"state\": \"%s\"}, \"alarm\": true, \"ACL\":{ \"%s\": { \"read\": true, \"write\": true}}}",
+    snprintf(objectJson, sizeof(objectJson), "{\"installationId\": \"%s\", \"value\": {\"state\": \"%s\"}, \"alarm\": true, \"ACL\":{ \"%s\": { \"read\": true, \"write\": true}}}",
             installationObjectId, ledStates[device_state], userObjectId);
     parseSendRequest(client, "POST", "/1/classes/Event", objectJson, NULL);
 }
@@ -127,8 +127,8 @@ static void blinkGetInstallationObjectIdByIdCallback(ParseClient client, int err
 static void blinkGetInstallationObjectId(ParseClient client)
 {
     if (installationObjectId[0] == '\0') {
-        char query[60];
-        sprintf(query, "where={\"installationId\":\"%s\"}", parseGetInstallationId(client));
+        char query[128];
+        snprintf(query, sizeof(query), "where={\"installationId\":\"%s\"}", parseGetInstallationId(client));
         parseSendRequest(client, "GET", "/1/installations", query, blinkGetInstallationObjectIdByIdCallback);
     }
 }
@@ -172,15 +172,14 @@ static void blinkUpdateInstallation(ParseClient client)
         blinkGetModelObjectId(client);
         blinkGetUserObjectId(client);
 
-        char path[40] = {0};
+        char path[128] = {0};
         char objectJson[1024] = {0};
-        sprintf(path, "/1/installations/%s", installationObjectId);
-        sprintf(objectJson, "{\"deviceName\": \"%s\", \"deviceSubtype\": \"fluffy\", \"model\": {\"__type\":\"Pointer\",\"className\":\"Model\",\"objectId\":\"%s\"}, \"owner\": {\"__type\":\"Pointer\",\"className\":\"_User\",\"objectId\":\"%s\"}}",
+        snprintf(path, sizeof(path), "/1/installations/%s", installationObjectId);
+        snprintf(objectJson, sizeof(objectJson), "{\"deviceName\": \"%s\", \"deviceSubtype\": \"fluffy\", \"model\": {\"__type\":\"Pointer\",\"className\":\"Model\",\"objectId\":\"%s\"}, \"owner\": {\"__type\":\"Pointer\",\"className\":\"_User\",\"objectId\":\"%s\"}}",
           "Raspberry PI blink", modelObjectId, userObjectId);
         parseSendRequest(client, "PUT", path, objectJson, NULL);
     }
 }
-
 
 int main(int argc, char *argv[]) {
 
@@ -229,8 +228,6 @@ int main(int argc, char *argv[]) {
         tv.tv_usec = 0;
 
         clock_gettime(CLOCK_MONOTONIC, &current);
-        printf("=========================================\n");
-        printf("current = (%2d, %09d)\n", current.tv_sec, current.tv_nsec);
 
         if (device_state == STATE_BLINK) {
 
