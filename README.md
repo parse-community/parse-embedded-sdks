@@ -6,13 +6,13 @@ These SDKs let you use [Parse](https://www.parse.com/) for building Internet of 
 
 * Build [cross-platform integrations](https://www.parse.com/products) between your connected device and mobile/web/desktop apps.
 
-* Allow your users to personalize and monitor their connected devices.  
+* Allow your users to personalize and monitor their connected devices.
     * Parse is the easiest way to [build user login](https://www.parse.com/docs/ios_guide#ui-login/iOS) on mobile apps.  Parse also has [user session APIs](https://www.parse.com/docs/ios_guide#sessions/iOS) in all mobile SDKs, which let you provision restricted sessions from the phone after the user logs into your app.  You can then transfer this restricted session token to your device so that your device can access user-specific data.
     * With Parse APIs, you can build a device manager screen in your mobile app what shows the user's provisioned connected devices (sample app below).  At any time, the user can revoke a device from accessing his or her data on Parse.
 
 * Send [push notifications](https://www.parse.com/products/push) to your connected devices.
 
-* Securely access your app's data from connected devices. 
+* Securely access your app's data from connected devices.
     * All communication between your connected device's Embedded SDK and the Parse Cloud, including push notifications, is protected by SSL encryption.
     * You can protect user data with [Access Control Lists (ACLs)](https://www.parse.com/docs/data#security-objects) so it can only be accessed with that user's session token.
 
@@ -47,6 +47,9 @@ Please see the Parse website for detailed developer guides:
 ##Sample App
 
 We prepared a [sample app](https://github.com/ParsePlatform/Anydevice) that demonstrates how to provision connected devices using a companion phone app such that connected devices can securely access user-specific data on the Parse Cloud. This sample app also demonstrates how to send push notifications between the phone app and connected devices.
+
+##Porting
+If you want to port this SDK to run on your own IoT platform, please see [/partners/partner_platform_instructions.md](/partners/partner_platform_instructions.md).
 
 ##Contributing
 
