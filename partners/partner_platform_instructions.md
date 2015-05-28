@@ -5,9 +5,8 @@ This document is for partner platform owners that want to make the Parse Embedde
 * Partners should fork the repo under your own organization on GitHub.
 * Partners are responsible for managing your fork of the repo.
 * In the README of your repo fork
-    * Please include a **quickstart guide** telling the developer how to get started on your board, including
-        * saving an object
-        * receiving a push notification
+    * Please include a **quickstart guide** telling the developer how to get started on your board (e.g. saving an object, receiving a push notification)
+        * Please see [Partner Quickstart Guidlines](/partners/partner_quickstart_guidelines.md) for details.
     * Please include the **developer support contact** for your board/platform.
         * Partners are responsible for responding to developer support questions for your board/platform in a timely manner.
 * Please try to reuse as much existing code as possible, and put your platform-specific code in its own directory.  This makes it easier for you to pull in future changes from the upstream Parse repo.
