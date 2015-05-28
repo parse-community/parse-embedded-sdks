@@ -20,7 +20,6 @@
  */
 
 #include "client.h"
-#include <openssl/err.h>
 
 int tcp_connect(const char *host, int port)
 {
@@ -41,7 +40,6 @@ int tcp_connect(const char *host, int port)
     if(connect(sock,(struct sockaddr *)&addr, sizeof(addr))<0) {
         return -1;
     }
-
     return sock;
 }
 
@@ -73,15 +71,27 @@ int tcp_read(int sock, char* data, int size, int timeout_sec) {
     int n_recv = 0;
     int n_tmp = 0;
     struct timeval tv;
-    tv.tv_sec = timeout_sec; // timeout
-    tv.tv_usec = 0;
+    tv.tv_sec = 0;
+    tv.tv_usec = 50000;
     setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
-    while(n_recv < size && (n_tmp = recv(sock, data+n_recv, size-n_recv, 0)) > 0){
-        if (n_tmp <= 0){
-            //fprintf(stdout, "i:nothing to read\n");
-            break;
+    int bracketCount = 0;
+    int readCount = 0;
+    while(n_recv < size && readCount++ < timeout_sec * 1000 / 50){
+        // need to put select to timeout asap
+        n_tmp = recv(sock, data+n_recv, size-n_recv, 0);
+        if (n_tmp == -1) {
+            n_tmp = 0;
+        }
+        // Analyze the data to get the object asap.
+        int i;
+        for(i = 0; i < n_tmp; i ++) {
+            if (data[n_recv + i] == '{') bracketCount++;
+            if (data[n_recv + i] == '}') bracketCount--;
         }
         n_recv += n_tmp;
+        if (n_recv > 0 && bracketCount == 0) {
+            break;
+        }
     }
     data[n_recv] = '\0';
     return n_recv;
