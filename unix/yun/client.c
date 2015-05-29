@@ -68,29 +68,35 @@ int tcp_write(int sock, char* data) {
 }
 
 int tcp_read(int sock, char* data, int size, int timeout_sec) {
+    struct timeval tv;
+    fd_set receive;
     int n_recv = 0;
     int n_tmp = 0;
-    struct timeval tv;
-    tv.tv_sec = 0;
-    tv.tv_usec = 50000;
-    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
     int bracketCount = 0;
     int readCount = 0;
-    while(n_recv < size && readCount++ < timeout_sec * 1000 / 50){
-        // need to put select to timeout asap
-        n_tmp = recv(sock, data+n_recv, size-n_recv, 0);
-        if (n_tmp == -1) {
-            n_tmp = 0;
-        }
-        // Analyze the data to get the object asap.
-        int i;
-        for(i = 0; i < n_tmp; i ++) {
-            if (data[n_recv + i] == '{') bracketCount++;
-            if (data[n_recv + i] == '}') bracketCount--;
-        }
-        n_recv += n_tmp;
-        if (n_recv > 0 && bracketCount == 0) {
-            break;
+    while(n_recv < size && readCount++ < timeout_sec * 10) {
+        FD_ZERO(&receive);
+        FD_SET(sock, &receive);
+        tv.tv_sec = 0;
+        tv.tv_usec = 100000;
+        if(select(sock + 1, &receive, NULL, NULL, &tv) > 0) {
+            if(FD_ISSET(sock, &receive)) {
+                // need to put select to timeout asap
+                n_tmp = recv(sock, data+n_recv, size-n_recv, 0);
+                if (n_tmp == -1) {
+                    n_tmp = 0;
+                }
+                // Analyze the data to get the object asap.
+                int i;
+                for(i = 0; i < n_tmp; i ++) {
+                    if (data[n_recv + i] == '{') bracketCount++;
+                    if (data[n_recv + i] == '}') bracketCount--;
+                }
+                n_recv += n_tmp;
+                if (n_recv > 0 && bracketCount == 0) {
+                    break;
+                }
+            }
         }
     }
     data[n_recv] = '\0';
