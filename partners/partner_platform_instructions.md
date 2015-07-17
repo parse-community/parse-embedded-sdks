@@ -9,6 +9,7 @@ This document is for partner platform owners that want to make the Parse Embedde
         * Please see [Partner Quickstart Guidlines](/partners/partner_quickstart_guidelines.md) for details.
     * Please include the **developer support contact** for your board/platform.
         * Partners are responsible for responding to developer support questions for your board/platform in a timely manner.
+        * Your developer support contact should be an email address or your official developer support forum that your engineers actively monitor.
 * Please try to reuse as much existing code as possible, and put your platform-specific code in its own directory.  This makes it easier for you to pull in future changes from the upstream Parse repo.
 * Future updates
     * Parse may routinely update the https://github.com/ParsePlatform/parse-embedded-sdks repo with bug fixes and new features.
