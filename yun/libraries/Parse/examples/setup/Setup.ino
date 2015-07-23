@@ -1,6 +1,6 @@
 #include <Bridge.h>
 
-String revision = "1.0.1-rc2-1_ar71xx";
+String revision = "1.0.1-rc3-1_ar71xx";
 String location = "https://raw.githubusercontent.com/ParsePlatform/parse-embedded-sdks/master/yun/linux_package/";
 
 void downloadPackage(String file) {

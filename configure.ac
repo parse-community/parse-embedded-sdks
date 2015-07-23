@@ -1,4 +1,4 @@
-AC_INIT(parse-embedded, 1.0.1-rc2, damiank@fb.com)
+AC_INIT(parse-embedded, 1.0.1-rc3, damiank@fb.com)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(common/simplejson.c)
 AC_CONFIG_SRCDIR(unix/src/parse.c)
@@ -20,6 +20,18 @@ AC_CHECK_LIB(curl, curl_easy_perform)
 AC_CHECK_HEADERS(curl/curl.h)
 AC_CHECK_LIB(uuid, uuid_generate_random)
 AC_CHECK_HEADERS(uuid/uuid.h)
+
+AC_CACHE_CHECK([whether getopt has optreset support],
+        ac_cv_have_getopt_optreset, [
+            AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+#include <getopt.h>
+            ]], [[ extern int optreset; optreset = 0; ]])],[ ac_cv_have_getopt_optreset="yes" ],[ ac_cv_have_getopt_optreset="no" 
+        ])
+])
+
+if test "x$ac_cv_have_getopt_optreset" = "xyes" ; then
+        AC_DEFINE(HAVE_OPTRESET, 1, [Define if optreset exists])
+fi
 
 AC_ARG_ENABLE([yun],
 [  --enable-yun    Enable Arduino Yun support],

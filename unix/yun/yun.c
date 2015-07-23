@@ -29,52 +29,55 @@
 #include "utils.h"
 #include "yun.h"
 
-char g_cAppID[APPLICATION_ID_MAX_LEN + 1];
-char g_cClientKey[CLIENT_KEY_MAX_LEN + 1];
-char g_cInstallationID[INSTALLATION_ID_MAX_LEN + 1];
-char g_cSessionToken[SESSION_TOKEN_MAX_LEN + 1];
+char g_cAppID[APPLICATION_ID_MAX_LEN + 1] = {0};
+char g_cClientKey[CLIENT_KEY_MAX_LEN + 1] = {0};
+char g_cInstallationID[INSTALLATION_ID_MAX_LEN + 1] ={0};
+char g_cSessionToken[SESSION_TOKEN_MAX_LEN + 1] = {0};
 
 int yunReadProvisioningInfo() {
   int socketHandle = -1;
   char buf[128];
   char value[64];
-  memset(value, 0, 64);
-  if ((socketHandle = tcp_connect("127.0.0.1", 5700)) > 0) {
+  if ((socketHandle = tcp_connect("localhost", 5700)) > 0) {
     // read appId
-    memset(buf, 0, 128);
+    memset(buf, 0, sizeof(buf));
+    memset(value, 0, sizeof(value));
     tcp_write(socketHandle, "{\"command\": \"get\", \"key\": \"appId\"}\n");
-    if (tcp_read(socketHandle, buf, 128, 2)) {
-      getValueFromJSON(buf, "value", value, 64);
+    if (tcp_read(socketHandle, buf, sizeof(buf) - 1, 2)) {
+      getValueFromJSON(buf, "value", value, sizeof(value));
       if(strcmp("null", value) != 0) {
         strncpy(g_cAppID, value, sizeof(g_cAppID));
       }
     }
     
     // read clientKey
-    memset(buf, 0, 128);
+    memset(buf, 0, sizeof(buf));
+    memset(value, 0, sizeof(value));
     tcp_write(socketHandle, "{\"command\": \"get\", \"key\": \"clientKey\"}\n");
-    if (tcp_read(socketHandle, buf, 128, 2)) {
-      getValueFromJSON(buf, "value", value, 64);
+    if (tcp_read(socketHandle, buf, sizeof(buf) - 1, 2)) {
+      getValueFromJSON(buf, "value", value, sizeof(value));
       if(strcmp("null", value) != 0) {
         strncpy(g_cClientKey, value, sizeof(g_cClientKey));
       }
     }
     
     // read installationId
-    memset(buf, 0, 128);
+    memset(buf, 0, sizeof(buf));
+    memset(value, 0, sizeof(value));
     tcp_write(socketHandle, "{\"command\": \"get\", \"key\": \"installationId\"}\n");
-    if (tcp_read(socketHandle, buf, 128, 2)) {
-      getValueFromJSON(buf, "value", value, 64);
+    if (tcp_read(socketHandle, buf, sizeof(buf) - 1, 2)) {
+      getValueFromJSON(buf, "value", value, sizeof(value));
       if(strcmp("null", value) != 0) {
         strncpy(g_cInstallationID, value, sizeof(g_cInstallationID));
       }
     }
     
     // read sessionToken
-    memset(buf, 0, 128);
+    memset(buf, 0, sizeof(buf));
+    memset(value, 0, sizeof(value));
     tcp_write(socketHandle, "{\"command\": \"get\", \"key\": \"sessionToken\"}\n");
-    if (tcp_read(socketHandle, buf, 128, 2)) {
-      getValueFromJSON(buf, "value", value, 64);
+    if (tcp_read(socketHandle, buf, sizeof(buf) - 1, 2)) {
+      getValueFromJSON(buf, "value", value, sizeof(value));
       if(strcmp("null", value) != 0) {
         strncpy(g_cSessionToken, value, sizeof(g_cSessionToken));
       }

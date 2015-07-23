@@ -179,8 +179,12 @@ int main(int argc , char **argv) {
   }
 
   // process post init options
+#if defined(HAVE_OPTRESET)
   optreset = 1;
   optind = 1;
+#else
+  optind = 0;
+#endif
 
   while((c=getopt(argc,argv,":a:k:x:y:v:e:d:p:ish"))!=-1){
     switch(c){
