@@ -14,7 +14,7 @@ PKG_VERSION:=1.0.1-rc3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-sdks-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=git://github.com/ParsePlatform/parse-embedded-sdks.git
+PKG_SOURCE_URL:=git://github.com/mtl2034/parse-embedded-sdks.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-sdks-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
