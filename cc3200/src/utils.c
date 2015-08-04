@@ -92,7 +92,7 @@ void createNewInstallationId(ParseClientInternal *parseClient) {
     }
 
     snprintf(parseClient->installationId,
-    		 sizeof(parseClient->installationId)-1,
+    		 sizeof(parseClient->installationId),
     		 "%x%x%x%x%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x%x%x%x%x%x%x%x%x",
              rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16, rand()%16,
              rand()%16, rand()%16, rand()%16, rand()%16,

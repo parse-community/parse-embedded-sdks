@@ -81,7 +81,7 @@ void initBoard() {
     ClearTerm();
 
     UART_PRINT("QuickStart - Parse for IoT sample application\r\n");
-    UART_PRINT("----------------------------------------\r\n");
+    UART_PRINT("---------------------------------------------\r\n");
     UART_PRINT("\r\n");
     UART_PRINT("[QuickStart] Board init\r\n");
 
