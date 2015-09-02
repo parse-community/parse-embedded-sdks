@@ -12,6 +12,7 @@ void downloadPackage(String file) {
   p.addParameter("-#");
   p.addParameter("-s");
   p.addParameter("-S");
+  p.addParameter("-k");
   p.addParameter("-o");
   p.addParameter("/tmp/" + file + revision + ".ipk");
   p.addParameter(location + file + revision + ".ipk");
