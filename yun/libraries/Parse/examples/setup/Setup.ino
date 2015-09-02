@@ -1,6 +1,6 @@
 #include <Bridge.h>
 
-String revision = "1.0.1-rc3-1_ar71xx";
+String revision = "1.0.1-1_ar71xx";
 String location = "https://raw.githubusercontent.com/ParsePlatform/parse-embedded-sdks/master/yun/linux_package/";
 
 void downloadPackage(String file) {
@@ -12,6 +12,7 @@ void downloadPackage(String file) {
   p.addParameter("-#");
   p.addParameter("-s");
   p.addParameter("-S");
+  p.addParameter("-k");
   p.addParameter("-o");
   p.addParameter("/tmp/" + file + revision + ".ipk");
   p.addParameter(location + file + revision + ".ipk");
@@ -26,6 +27,8 @@ void installPackage(String file) {
   Process p;
   p.begin("opkg");
   p.addParameter("install");
+  p.addParameter("--force-reinstall");
+  p.addParameter("--force-downgrade");
   p.addParameter("/tmp/" + file + revision + ".ipk");
   p.run();
   while(p.available()) {

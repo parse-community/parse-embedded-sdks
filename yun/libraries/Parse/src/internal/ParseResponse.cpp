@@ -159,7 +159,7 @@ void  ParseResponse::freeBuffer() {
 }
 
 void ParseResponse::close() {
-  if (client) {
+  if (client && client != &Parse.pushClient) {
     client->close();
   }
   freeBuffer();
