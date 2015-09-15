@@ -1,4 +1,4 @@
-AC_INIT(parse-embedded, 1.0.1, damiank@fb.com)
+AC_INIT(parse-embedded, 1.0.2, damiank@fb.com)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(common/simplejson.c)
 AC_CONFIG_SRCDIR(unix/src/parse.c)
