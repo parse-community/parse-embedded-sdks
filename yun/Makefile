@@ -33,7 +33,7 @@ CFLAGS+=-c -g -Os -w -ffunction-sections -fdata-sections -MMD
 CFLAGS+=-DARDUINO=10600 -DARDUINO_AVR_YUN -DARDUINO_ARCH_AVR
 CFLAGS+=-DUSB_MANUFACTURER= -DUSB_PRODUCT="\"Arduino Yun\"" -DUSB_VID=0x2341 -DUSB_PID=0x8041
 
-VPATH+=libraries/Parse/src/internal
+VPATH+=../../Parse-SDK-Arduino/src/internal
 VPATH+=$(SKETCH_PATH)/libraries/Bridge/src
 VPATH+=$(SKETCH_PATH)/hardware/arduino/avr/cores/arduino
 
@@ -41,8 +41,8 @@ INCLUDE=\
 -I$(SKETCH_PATH)/hardware/arduino/avr/variants/yun \
 -I$(SKETCH_PATH)/hardware/arduino/avr/cores/arduino \
 -I$(SKETCH_PATH)/libraries/Bridge/src \
--I./libraries/Parse/src/internal \
--I./libraries/Parse/src
+-I../../Parse-SDK-Arduino/src/internal \
+-I../../Parse-SDK-Arduino/src
 
 ifeq (upload,$(firstword $(MAKECMDGOALS)))
   TARGET_BIN:=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -58,8 +58,8 @@ directory:
 	@mkdir -p $(EXE_DIR)
 
 inofile: Blink.cpp QuickStart.cpp
-	@cp libraries/Parse/examples/blink/Blink.ino Blink.cpp
-	@cp libraries/Parse/examples/quickstart/QuickStart.ino QuickStart.cpp
+	@cp ../../Parse-SDK-Arduino/examples/blink/Blink.ino Blink.cpp
+	@cp ../../Parse-SDK-Arduino/examples/quickstart/QuickStart.ino QuickStart.cpp
 
 BLINK_OBJS+= $(OBJ_DIR)/Blink.o
 QS_OBJS+= $(OBJ_DIR)/QuickStart.o
