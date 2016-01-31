@@ -43,6 +43,7 @@
 #define PARSE_INSTALLATION_ID "installationID"
 #define PARSE_SESSION_TOKEN "sessionToken"
 #define PARSE_LAST_PUSH_TIME "lastPushTime"
+#define PARSE_DEFAULT_SERVER_URL "https://api.parse.com"
 
 typedef struct _ParseClientInternal {
     const char *applicationId;
@@ -52,6 +53,7 @@ typedef struct _ParseClientInternal {
     char *sessionToken;
     char *osVersion;
     char *lastPushTime;
+    char *serverURL;
     parsePushCallback pushCallback;
     CURL *pushCurlHandle;
     unsigned long long lastHearbeat;
@@ -116,6 +118,50 @@ static size_t curlDataCallback(void *contents, size_t size, size_t nmemb, void *
     free(temp);
 
     return size * nmemb;
+}
+
+ParseClient parseInitializeWithURL(
+        const char *applicationId,
+        const char *clientKey,
+        const char *serverURL)
+{
+    parseSetLogLevel(PARSE_LOG_WARN);
+
+    ParseClientInternal *client = calloc(1, sizeof(ParseClientInternal));
+    if (client == NULL) {
+        parseLog(PARSE_LOG_ERROR, "%s:%s generated out of memory.\n", __FUNCTION__, __LINE__);
+        return NULL;
+    }
+    if (applicationId != NULL)
+        client->applicationId= strdup(applicationId);
+    if (clientKey != NULL)
+        client->clientKey = strdup(clientKey);
+    if (serverURL != NULL)
+        client->serverURL = strdup(serverURL);
+
+    char version[256];
+    parseOsGetVersion(version, sizeof(version));
+    client->osVersion = strdup(version);
+
+    char temp[40];
+    parseOsLoadKey(client->applicationId, PARSE_INSTALLATION_ID, temp, sizeof(temp));
+    if (temp[0] != '\0') {
+        parseSetInstallationId((ParseClient)client, temp);
+    }
+
+    parseOsLoadKey(client->applicationId, PARSE_SESSION_TOKEN, temp, sizeof(temp));
+    if (temp[0] != '\0') {
+        parseSetSessionToken((ParseClient)client, temp);
+    }
+
+    parseOsLoadKey(client->applicationId, PARSE_LAST_PUSH_TIME, temp, sizeof(temp));
+    if (temp[0] != '\0') {
+        client->lastPushTime = strdup(temp);
+    }
+
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    return (ParseClient)client;
 }
 
 ParseClient parseInitialize(
@@ -539,7 +585,13 @@ static void parseSendRequestInternal(
         }
     }
 
-    int urlSize = strlen("https://api.parse.com");
+    int urlSize = 0;
+    if(clientInternal->serverURL != NULL){
+        urlSize = strlen(clientInternal->serverURL);
+    }
+    else {
+        urlSize = strlen(PARSE_DEFAULT_SERVER_URL);
+    }
     urlSize += strlen(httpPath) + 1;
     char* getEncodedBody = NULL;
     if (getRequestBody) {
@@ -551,7 +603,15 @@ static void parseSendRequestInternal(
         if (callback != NULL) callback(client, ENOMEM, 0, NULL);
         return;
     }
-    strncat(fullUrl, "https://api.parse.com", urlSize);
+    
+    if(clientInternal->serverURL != NULL){
+        strncat(fullUrl, clientInternal->serverURL, urlSize);
+    }
+    else {
+        strncat(fullUrl, PARSE_DEFAULT_SERVER_URL, urlSize);
+    }
+
+    
     strncat(fullUrl, httpPath, urlSize - strlen(fullUrl));
     if (getRequestBody) {
         strncat(fullUrl, "?", urlSize - strlen(fullUrl));

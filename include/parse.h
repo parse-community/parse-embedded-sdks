@@ -142,6 +142,25 @@ typedef void (*parsePushCallback)(ParseClient client, int error, const char* dat
  */
 ParseClient parseInitialize(const char *applicationId, const char *clientKey);
 
+/*! \fn ParseClient parseInitializeWithURL(const char *applicationId, const char *clientKey, const char *serverURL)
+ *  \brief Initialize the Parse client and user session with parse server URL
+ *
+ *  This method only initializes the Parse client, used for subsequent API requests with parse-server URL. It does
+ *  not start the push service, and does not create or load the installation object for the client.
+ *
+ *  \param[in]  applicationId    The application id for the Parse application. (required)
+ *  \param[in]  clientKey        The client API key for the Parse application. (required)
+ *  \param[in]  serverURL        The server URL for the Parse-server connection . (required)
+ *
+ *  \result                      The client handle to use with the SDK.
+ *
+ *  The caller retains ownership of the applicationId and clientKey buffers, and is responsible for
+ *  freeing them and reclaiming the memory after this call.
+ *  The SDK will make copies of the buffers.
+ */
+ParseClient parseInitializeWithURL(const char *applicationId,  const char *clientKey, const char *serverURL);
+
+
 /*! \fn void parseSetInstallationId(ParseClient client, const char *installationId)
  *  \brief Set the installation object id for this client.
  *
