@@ -74,3 +74,55 @@ ParseClient parseInitialize(const char *applicationId, const char *clientKey) {
 ParseClientInternal *getInternalClient(ParseClient client) {
     return (ParseClientInternal *)(client);
 }
+
+
+ParseClient parseInitializeWithServerURL(const char *applicationId, const char *clientKey, const char *serverURL) {
+#ifdef CLIENT_DEBUG
+    DEBUG_PRINT("[Parse] Initializing new client.\r\n");
+#endif /* CLIENT_DEBUG */
+
+    // Do any one-time intialization of the new client
+    ParseClientInternal *parseClient = (ParseClientInternal *)malloc(sizeof(ParseClientInternal));
+
+    if (parseClient != NULL) {
+		memset(parseClient->applicationId, 0, sizeof(parseClient->applicationId));
+		memset(parseClient->clientKey, 0, sizeof(parseClient->clientKey));
+		memset(parseClient->installationObjectId, 0, sizeof(parseClient->installationObjectId));
+		memset(parseClient->installationId, 0, sizeof(parseClient->installationId));
+		memset(parseClient->sessionToken, 0, sizeof(parseClient->sessionToken));
+
+		// Copy the application id and the client key to the client
+		strncpy(parseClient->applicationId, applicationId, APPLICATION_ID_MAX_LEN);
+		strncpy(parseClient->clientKey, clientKey, CLIENT_KEY_MAX_LEN);
+		strncpy(parseClient->serverURL, serverURL, SERVER_URL_MAX_LEN);
+
+#ifdef CLIENT_DEBUG
+		DEBUG_PRINT("[Parse] Application id: %s.\r\n", parseClient->applicationId);
+		DEBUG_PRINT("[Parse] Client key: %s.\r\n", parseClient->clientKey);
+#endif /* CLIENT_DEBUG */
+
+		// initialize the push service data
+		parseClient->socketHandle = -1;
+		parseClient->callback = NULL;
+		parseClient->nFailedPing = 0;
+		memset(parseClient->lastPushTime, 0, sizeof(parseClient->lastPushTime));
+
+		memset(parseClient->osVersion, 0, sizeof(parseClient->osVersion));
+		memset(parseClient->deviceClientVersion, 0, sizeof(parseClient->deviceClientVersion));
+
+		fetchDeviceOSVersion(parseClient->osVersion, sizeof(parseClient->osVersion)-1);
+		strncpy(parseClient->deviceClientVersion, CLIENT_VERSION, CLIENT_VERSION_MAX_LEN);
+
+		loadClientState(parseClient);
+#ifdef CLIENT_DEBUG
+    } else {
+		DEBUG_PRINT("[Parse] Failed to allocate client handle.\r\n");
+#endif /* CLIENT_DEBUG */
+    }
+
+    return (ParseClient)parseClient;
+}
+
+ParseClientInternal *getInternalClient(ParseClient client) {
+    return (ParseClientInternal *)(client);
+}

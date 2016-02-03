@@ -83,6 +83,7 @@ typedef struct _ParseClientInternal {
     char installationObjectId[OBJECT_ID_MAX_LEN+1];
     char installationId[INSTALLATION_ID_MAX_LEN+1];
     char sessionToken[SESSION_TOKEN_MAX_LEN+1];
+    char serverURL[SERVER_URL_MAX_LEN];
     parsePushCallback callback;
     int socketHandle;
     int nFailedPing;
@@ -90,7 +91,6 @@ typedef struct _ParseClientInternal {
     char osVersion[OS_VERSION_MAX_LEN+1];
     char deviceClientVersion[CLIENT_VERSION_MAX_LEN+1];
 } ParseClientInternal;
-
 
 
 // SDK functions common for all platforms, implementations are in /rtos folder
