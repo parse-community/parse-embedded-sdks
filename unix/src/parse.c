@@ -136,8 +136,11 @@ ParseClient parseInitializeWithServerURL(
         client->applicationId= strdup(applicationId);
     if (clientKey != NULL)
         client->clientKey = strdup(clientKey);
+
     if (serverURL != NULL)
         client->serverURL = strdup(serverURL);
+    else if (serverURL == NULL)
+        client->serverURL = strdup(PARSE_DEFAULT_SERVER_URL);
 
     char version[256];
     parseOsGetVersion(version, sizeof(version));
@@ -168,41 +171,7 @@ ParseClient parseInitialize(
         const char *applicationId,
         const char *clientKey)
 {
-    parseSetLogLevel(PARSE_LOG_WARN);
-
-    ParseClientInternal *client = calloc(1, sizeof(ParseClientInternal));
-    if (client == NULL) {
-        parseLog(PARSE_LOG_ERROR, "%s:%s generated out of memory.\n", __FUNCTION__, __LINE__);
-        return NULL;
-    }
-    if (applicationId != NULL)
-        client->applicationId= strdup(applicationId);
-    if (clientKey != NULL)
-        client->clientKey = strdup(clientKey);
-
-    char version[256];
-    parseOsGetVersion(version, sizeof(version));
-    client->osVersion = strdup(version);
-
-    char temp[40];
-    parseOsLoadKey(client->applicationId, PARSE_INSTALLATION_ID, temp, sizeof(temp));
-    if (temp[0] != '\0') {
-        parseSetInstallationId((ParseClient)client, temp);
-    }
-
-    parseOsLoadKey(client->applicationId, PARSE_SESSION_TOKEN, temp, sizeof(temp));
-    if (temp[0] != '\0') {
-        parseSetSessionToken((ParseClient)client, temp);
-    }
-
-    parseOsLoadKey(client->applicationId, PARSE_LAST_PUSH_TIME, temp, sizeof(temp));
-    if (temp[0] != '\0') {
-        client->lastPushTime = strdup(temp);
-    }
-
-    curl_global_init(CURL_GLOBAL_ALL);
-
-    return (ParseClient)client;
+    return parseInitializeWithServerURL(applicationId, clientKey, NULL);
 }
 
 static void setInstallationCallback(ParseClient client, int error, int httpStatus, const char* httpResponseBody)
@@ -585,13 +554,7 @@ static void parseSendRequestInternal(
         }
     }
 
-    int urlSize = 0;
-    if(clientInternal->serverURL != NULL){
-        urlSize = strlen(clientInternal->serverURL);
-    }
-    else {
-        urlSize = strlen(PARSE_DEFAULT_SERVER_URL);
-    }
+    int urlSize = strlen(clientInternal->serverURL);
     urlSize += strlen(httpPath) + 1;
     char* getEncodedBody = NULL;
     if (getRequestBody) {
