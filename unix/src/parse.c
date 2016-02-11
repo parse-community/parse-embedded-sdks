@@ -43,6 +43,7 @@
 #define PARSE_INSTALLATION_ID "installationID"
 #define PARSE_SESSION_TOKEN "sessionToken"
 #define PARSE_LAST_PUSH_TIME "lastPushTime"
+#define PARSE_DEFAULT_SERVER_URL "https://api.parse.com"
 
 typedef struct _ParseClientInternal {
     const char *applicationId;
@@ -52,6 +53,7 @@ typedef struct _ParseClientInternal {
     char *sessionToken;
     char *osVersion;
     char *lastPushTime;
+    char *serverURL;
     parsePushCallback pushCallback;
     CURL *pushCurlHandle;
     unsigned long long lastHearbeat;
@@ -118,9 +120,10 @@ static size_t curlDataCallback(void *contents, size_t size, size_t nmemb, void *
     return size * nmemb;
 }
 
-ParseClient parseInitialize(
+ParseClient parseInitializeWithServerURL(
         const char *applicationId,
-        const char *clientKey)
+        const char *clientKey,
+        const char *serverURL)
 {
     parseSetLogLevel(PARSE_LOG_WARN);
 
@@ -133,6 +136,11 @@ ParseClient parseInitialize(
         client->applicationId= strdup(applicationId);
     if (clientKey != NULL)
         client->clientKey = strdup(clientKey);
+
+    if (serverURL != NULL)
+        client->serverURL = strdup(serverURL);
+    else if (serverURL == NULL)
+        client->serverURL = strdup(PARSE_DEFAULT_SERVER_URL);
 
     char version[256];
     parseOsGetVersion(version, sizeof(version));
@@ -157,6 +165,13 @@ ParseClient parseInitialize(
     curl_global_init(CURL_GLOBAL_ALL);
 
     return (ParseClient)client;
+}
+
+ParseClient parseInitialize(
+        const char *applicationId,
+        const char *clientKey)
+{
+    return parseInitializeWithServerURL(applicationId, clientKey, NULL);
 }
 
 static void setInstallationCallback(ParseClient client, int error, int httpStatus, const char* httpResponseBody)
@@ -539,7 +554,7 @@ static void parseSendRequestInternal(
         }
     }
 
-    int urlSize = strlen("https://api.parse.com");
+    int urlSize = strlen(clientInternal->serverURL);
     urlSize += strlen(httpPath) + 1;
     char* getEncodedBody = NULL;
     if (getRequestBody) {
@@ -551,7 +566,15 @@ static void parseSendRequestInternal(
         if (callback != NULL) callback(client, ENOMEM, 0, NULL);
         return;
     }
-    strncat(fullUrl, "https://api.parse.com", urlSize);
+    
+    if(clientInternal->serverURL != NULL){
+        strncat(fullUrl, clientInternal->serverURL, urlSize);
+    }
+    else {
+        strncat(fullUrl, PARSE_DEFAULT_SERVER_URL, urlSize);
+    }
+
+    
     strncat(fullUrl, httpPath, urlSize - strlen(fullUrl));
     if (getRequestBody) {
         strncat(fullUrl, "?", urlSize - strlen(fullUrl));
