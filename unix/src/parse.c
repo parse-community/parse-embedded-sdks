@@ -601,9 +601,10 @@ static void parseSendRequestInternal(
     snprintf(header, sizeof(header), "X-Parse-OS-Version: %s", clientInternal->osVersion);
     headers = curl_slist_append(headers, header);
 
-    snprintf(header, sizeof(header), "X-Parse-Client-Key: %s", clientInternal->clientKey);
-    headers = curl_slist_append(headers, header);
-
+    if (clientInternal->clientKey){
+        snprintf(header, sizeof(header), "X-Parse-Client-Key: %s", clientInternal->clientKey);
+        headers = curl_slist_append(headers, header);
+    }
     if (useInstallationIdHeader && clientInternal->installationId) {
         snprintf(header, sizeof(header), "X-Parse-Installation-Id: %s", clientInternal->installationId);
         headers = curl_slist_append(headers, header);
