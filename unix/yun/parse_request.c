@@ -169,7 +169,12 @@ int main(int argc , char **argv) {
     exit(0);
   }
 
-  ParseClient client = parseInitialize(g_cAppID,g_cClientKey);
+  ParseClient client;
+  if (g_cServerURL[0] == '\0') {
+      client = parseInitialize(g_cAppID, g_cClientKey);
+  } else {
+      client = parseInitializeWithServerURL(g_cAppID, g_cClientKey, g_cServerURL);
+  }
 
   if(g_cInstallationID[0] != '\0') {
 	parseSetInstallationId(client, g_cInstallationID);

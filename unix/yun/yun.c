@@ -33,6 +33,7 @@ char g_cAppID[APPLICATION_ID_MAX_LEN + 1] = {0};
 char g_cClientKey[CLIENT_KEY_MAX_LEN + 1] = {0};
 char g_cInstallationID[INSTALLATION_ID_MAX_LEN + 1] ={0};
 char g_cSessionToken[SESSION_TOKEN_MAX_LEN + 1] = {0};
+char g_cServerURL[SERVER_URL_MAX_LEN + 1] = {0};
 
 int yunReadProvisioningInfo() {
   int socketHandle = -1;
@@ -80,6 +81,17 @@ int yunReadProvisioningInfo() {
       getValueFromJSON(buf, "value", value, sizeof(value));
       if(strcmp("null", value) != 0) {
         strncpy(g_cSessionToken, value, sizeof(g_cSessionToken));
+      }
+    }
+
+    // read serverURL
+    memset(buf, 0, sizeof(buf));
+    memset(value, 0, sizeof(value));
+    tcp_write(socketHandle, "{\"command\": \"get\", \"key\": \"serverURL\"}\n");
+    if (tcp_read(socketHandle, buf, sizeof(buf) - 1, 2)) {
+      getValueFromJSON(buf, "value", value, sizeof(value));
+      if(strcmp("null", value) != 0) {
+        strncpy(g_cServerURL, value, sizeof(g_cServerURL));
       }
     }
     tcp_close(socketHandle);
