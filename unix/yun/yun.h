@@ -28,6 +28,7 @@ extern char g_cAppID[APPLICATION_ID_MAX_LEN + 1];
 extern char g_cClientKey[CLIENT_KEY_MAX_LEN + 1];
 extern char g_cInstallationID[INSTALLATION_ID_MAX_LEN + 1];
 extern char g_cSessionToken[SESSION_TOKEN_MAX_LEN + 1];
+extern char g_cServerURL[SERVER_URL_MAX_LEN + 1];
 
 int yunReadProvisioningInfo();
 
