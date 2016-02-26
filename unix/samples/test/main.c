@@ -116,11 +116,11 @@ int main(int argc, char *argv[]) {
     char objectId[11] = {0};
     char path[256]  = {0};
 
-    snprintf(classPathOne, sizeof(classPathOne), "/1/classes/TestObjectOne%ld", run);
+    snprintf(classPathOne, sizeof(classPathOne), "/classes/TestObjectOne%ld", run);
 
 
     // TEST INITIALIZATION
-    ParseClient client = parseInitialize(YOUR_APP_IP, YOUR_CLIENT_KEY);
+    ParseClient client = parseInitializeWithServerURL(YOUR_APP_IP, YOUR_CLIENT_KEY, YOUR_SERVER_URL);
     logResults(client != NULL, 1, "parseInitialize call", "failed to start parse");
 
 
@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
     const char* id = parseGetInstallationId(client);
     logResults(id == NULL, 0, "parseGetInstallationId call", "remove .parse-embedded from home directory");
 
-    parseSendRequest(client, "GET", "/1/classes/testObjectFake/1111111", NULL, NULL);
+    parseSendRequest(client, "GET", "/classes/testObjectFake/1111111", NULL, NULL);
 
     id = parseGetInstallationId(client);
     logResults(id != NULL, 1, "parseGetInstallationId call", "did not create the installation id properly");

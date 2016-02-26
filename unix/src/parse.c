@@ -43,7 +43,7 @@
 #define PARSE_INSTALLATION_ID "installationID"
 #define PARSE_SESSION_TOKEN "sessionToken"
 #define PARSE_LAST_PUSH_TIME "lastPushTime"
-#define PARSE_DEFAULT_SERVER_URL "https://api.parse.com"
+#define PARSE_DEFAULT_SERVER_URL "https://api.parse.com/1"
 
 typedef struct _ParseClientInternal {
     const char *applicationId;
@@ -212,7 +212,7 @@ void parseSetInstallationId(ParseClient client, const char *installationId)
         strncat(payload, clientInternal->installationId, payloadLength - strlen(payload));
         strncat(payload, "\",\"deviceType\":\"embedded\"}", payloadLength - strlen(payload));
 
-        parseSendRequestInternal(client, "POST", "/1/installations/", payload, setInstallationCallback, 0);
+        parseSendRequestInternal(client, "POST", "/installations/", payload, setInstallationCallback, 0);
         free(payload);
     } else {
         parseOsClearKey(clientInternal->applicationId, PARSE_INSTALLATION_ID);
@@ -248,9 +248,9 @@ static void getSessionObjectCallback(ParseClient client, int error, int httpStat
                 parseLog(PARSE_LOG_INFO, "Session and installationId matched.\n");
             } else {
                 // if no installation id this is new session and need to 
-                // associate it with simple PUT /1/sessions/me with empty body {}
+                // associate it with simple PUT /sessions/me with empty body {}
                 // and header with installation id.
-                parseSendRequest(client, "PUT", "/1/sessions/me", "{}", NULL);
+                parseSendRequest(client, "PUT", "/sessions/me", "{}", NULL);
             }
         } else {
             // no session found, do nothing
@@ -273,8 +273,8 @@ void parseSetSessionToken(ParseClient client, const char *sessionToken)
         }
         clientInternal->sessionToken= strdup(sessionToken);
 
-        // query the session object by doing GET on /1/sessions/me
-        parseSendRequest(client, "GET", "/1/sessions/me", NULL, getSessionObjectCallback);
+        // query the session object by doing GET on /sessions/me
+        parseSendRequest(client, "GET", "/sessions/me", NULL, getSessionObjectCallback);
     } else {
         parseOsClearKey(clientInternal->applicationId, PARSE_SESSION_TOKEN);
         if (clientInternal->sessionToken != NULL) {

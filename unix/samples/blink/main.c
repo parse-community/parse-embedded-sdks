@@ -98,7 +98,7 @@ static void saveCurrentDeviceState(ParseClient client, int device_state) {
     char objectJson[1024];
     snprintf(objectJson, sizeof(objectJson), "{\"installationId\": \"%s\", \"value\": {\"state\": \"%s\"}, \"alarm\": true, \"ACL\":{ \"%s\": { \"read\": true, \"write\": true}}}",
             installationObjectId, ledStates[device_state], userObjectId);
-    parseSendRequest(client, "POST", "/1/classes/Event", objectJson, NULL);
+    parseSendRequest(client, "POST", "/classes/Event", objectJson, NULL);
 }
 
 static void blinkGetUserObjectIdCallback(ParseClient client, int error, int httpStatus, const char* httpResponseBody)
@@ -129,7 +129,7 @@ static void blinkGetInstallationObjectId(ParseClient client)
     if (installationObjectId[0] == '\0') {
         char query[128];
         snprintf(query, sizeof(query), "where={\"installationId\":\"%s\"}", parseGetInstallationId(client));
-        parseSendRequest(client, "GET", "/1/installations", query, blinkGetInstallationObjectIdByIdCallback);
+        parseSendRequest(client, "GET", "/installations", query, blinkGetInstallationObjectIdByIdCallback);
     }
 }
 
@@ -150,14 +150,14 @@ static void blinkGetModelObjectIdByNameCallback(ParseClient client, int error, i
 static void blinkGetUserObjectId(ParseClient client)
 {
     if (userObjectId[0] == '\0') {
-        parseSendRequest(client, "GET", "/1/users/me", NULL, blinkGetUserObjectIdCallback);
+        parseSendRequest(client, "GET", "/users/me", NULL, blinkGetUserObjectIdCallback);
     }
 }
 
 static void blinkGetModelObjectId(ParseClient client)
 {
     if(modelObjectId[0] == '\0') {
-        parseSendRequest(client, "GET", "/1/classes/Model", "where={\"appName\":\"fbdr000001a\"}", blinkGetModelObjectIdByNameCallback);
+        parseSendRequest(client, "GET", "/classes/Model", "where={\"appName\":\"fbdr000001a\"}", blinkGetModelObjectIdByNameCallback);
     }
 }
 
@@ -174,7 +174,7 @@ static void blinkUpdateInstallation(ParseClient client)
 
         char path[128] = {0};
         char objectJson[1024] = {0};
-        snprintf(path, sizeof(path), "/1/installations/%s", installationObjectId);
+        snprintf(path, sizeof(path), "/installations/%s", installationObjectId);
         snprintf(objectJson, sizeof(objectJson), "{\"deviceName\": \"%s\", \"deviceSubtype\": \"fluffy\", \"model\": {\"__type\":\"Pointer\",\"className\":\"Model\",\"objectId\":\"%s\"}, \"owner\": {\"__type\":\"Pointer\",\"className\":\"_User\",\"objectId\":\"%s\"}}",
           "Raspberry PI blink", modelObjectId, userObjectId);
         parseSendRequest(client, "PUT", path, objectJson, NULL);
