@@ -114,6 +114,7 @@ void displayHelp() {
             "  -k - set client key\n"
             "  -x - set installation id\n"
             "  -y - set session token\n"
+            "  -u - set server url\n"
             "\n", VERSION);
 }
 
@@ -123,7 +124,7 @@ int main(int argc , char **argv) {
   int isYun = yunReadProvisioningInfo();
 
   // process pre init options
-  while((c=getopt(argc,argv,":a:k:x:y:v:e:d:p:ish"))!=-1){
+  while((c=getopt(argc,argv,":a:k:x:y:u:v:e:d:p:ish"))!=-1){
     switch(c) {
         case 'h':
             displayHelp();
@@ -139,6 +140,9 @@ int main(int argc , char **argv) {
             break;
         case 'y':
             strncpy(g_cSessionToken, optarg, sizeof(g_cSessionToken));
+            break;
+        case 'u':
+            strncpy(g_cServerURL, optarg, sizeof(g_cServerURL));
             break;
         case 'v':
         case 'e':
@@ -191,7 +195,7 @@ int main(int argc , char **argv) {
   optind = 0;
 #endif
 
-  while((c=getopt(argc,argv,":a:k:x:y:v:e:d:p:ish"))!=-1){
+  while((c=getopt(argc,argv,":a:k:x:y:v:u:e:d:p:ish"))!=-1){
     switch(c){
       case 'v': // http verb
         if(!(verb=strdup(optarg))){
