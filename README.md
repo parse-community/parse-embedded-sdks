@@ -1,4 +1,4 @@
-#Parse Embedded C SDKs
+# Parse Embedded C SDKs
 
 [Parse Embedded C SDKs](https://www.parse.com/products/iot) provide support for Arduino Yún, Unix, and RTOS C platforms.
 
@@ -22,21 +22,21 @@ These SDKs let you use [Parse](https://www.parse.com/) for building Internet of 
 
 * Intuitively visualize your cloud data with the [Data Browser](http://blog.parse.com/2012/12/20/the-new-data-browser-2/) on the Parse website.
 
-##Getting Started
+## Getting Started
 
-###Arduino Yún
+### Arduino Yún
 
 Please follow our [Parse Arduino Quickstart](https://www.parse.com/apps/quickstart#embedded/arduinoyun).  We highly recommend using Arduino Software (IDE).  See the [yun directory](/yun) for more details.
 
-###Raspberry Pi / Ubuntu / Debian / other Unix-based systems
+### Raspberry Pi / Ubuntu / Debian / other Unix-based systems
 
 Please follow our [Parse Raspberry Pi Quickstart](https://www.parse.com/apps/quickstart#embedded/raspberrypi). See the [include](/include), [unix](/unix), and [debian](/debian) directories for more details.
 
-###TI CC3200 / other Real-time operatings systems (RTOS)
+### TI CC3200 / other Real-time operatings systems (RTOS)
 
 Please follow our [Parse CC3200 Quickstart](https://www.parse.com/apps/quickstart#embedded/ticc3200). See the [cc3200 directory](/cc3200) for more details.
 
-##Documentation
+## Documentation
 
 Please see the Parse website for detailed developer guides:
 
@@ -44,24 +44,24 @@ Please see the Parse website for detailed developer guides:
 
 * [Embedded C Guide](https://www.parse.com/docs/embedded_c_guide) (Raspberry Pi / Unix / TI CC 3200)
 
-##Sample App
+## Sample App
 
 We prepared a [sample app](https://github.com/ParsePlatform/Anydevice) that demonstrates how to provision connected devices using a companion phone app such that connected devices can securely access user-specific data on the Parse Cloud. This sample app also demonstrates how to send push notifications between the phone app and connected devices.
 
-##Porting
+## Porting
 If you want to port this SDK to run on your own IoT platform, please see [/partners/partner_platform_instructions.md](/partners/partner_platform_instructions.md).
 
-##Contributing
+## Contributing
 
 See the CONTRIBUTING file for how to help out.
 
-##License
+## License
 
 Copyright (c) 2015, Parse, LLC. All rights reserved.
 
 You are hereby granted a non-exclusive, worldwide, royalty-free license to use, copy, modify, and distribute this software in source code or binary form for use in connection with the web services and APIs provided by Parse.
 
-As with any software that integrates with the Parse platform, your use of this software is subject to the Parse Terms of Service [https://www.parse.com/about/terms]. This copyright notice shall be included in all copies or substantial portions of the software.
+As with any software that integrates with the Parse platform, your use of this software is subject to the Parse [Terms of Service](https://www.parse.com/about/terms). This copyright notice shall be included in all copies or substantial portions of the software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
