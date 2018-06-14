@@ -39,8 +39,10 @@ AC_SUBST(CC)
 AC_CHECK_LIB(curl, curl_easy_perform)
 AC_CHECK_HEADERS(curl/curl.h)
 
+
 AM_COND_IF([UNIX],
-           AC_CHECK_LIB(uuid, uuid_generate_random)
+           AC_CHECK_LIB(uuid, uuid_generate_random),
+           AC_CHECK_LIB(rpcrt4, UuidCreate, , [AC_MSG_ERROR([cannot link with rpcrt4.dll.])])
            )
 
 AM_COND_IF([UNIX],

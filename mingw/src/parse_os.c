@@ -164,14 +164,17 @@ static int parseOsRemoveDir(const char* dir) {
     dir_ptr = opendir(dir);
     if (dir_ptr != NULL) {
         while ((entry_ptr = readdir(dir_ptr))) {
+            DWORD dwAttrs;
             struct stat entry_stats;
             snprintf(filename, FILENAME_MAX, "%s/%s", dir, entry_ptr->d_name);
 
-            if (lstat(filename, &entry_stats) < 0) {
+            dwAttrs = GetFileAttributes(filename); 
+            if (dwAttrs==INVALID_FILE_ATTRIBUTES) {
                 parseLog(PARSE_LOG_ERROR, "Could not stat %s\n", filename);
                 return 1;
             }
-            if(S_ISDIR(entry_stats.st_mode)) {
+
+            if (dwAttrs & FILE_ATTRIBUTE_DIRECTORY) {
                 if(strcmp(entry_ptr->d_name, ".") && strcmp(entry_ptr->d_name, "..")) {
                     parseOsRemoveDir(filename);
                 }
