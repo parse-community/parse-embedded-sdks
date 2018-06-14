@@ -14,8 +14,14 @@ case "${host_os}" in
 esac
 
 AM_CONDITIONAL([WINDOWS], [test "$os_dir" = "mingw"])
+AM_CONDITIONAL([UNIX], [test "$os_dir" = "unix"])
 
-AC_CONFIG_SRCDIR(unix/src/parse.c)
+
+AM_COND_IF([UNIX],
+           AC_CONFIG_SRCDIR(unix/src/parse.c),
+           AC_CONFIG_SRCDIR(mingw/src/parse.c)
+           )
+
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE
@@ -32,8 +38,14 @@ AC_SUBST(CC)
 
 AC_CHECK_LIB(curl, curl_easy_perform)
 AC_CHECK_HEADERS(curl/curl.h)
-AC_CHECK_LIB(uuid, uuid_generate_random)
-AC_CHECK_HEADERS(uuid/uuid.h)
+
+AM_COND_IF([UNIX],
+           AC_CHECK_LIB(uuid, uuid_generate_random)
+           )
+
+AM_COND_IF([UNIX],
+           AC_CHECK_HEADERS(uuid/uuid.h)
+           )
 
 AC_CACHE_CHECK([whether getopt has optreset support],
         ac_cv_have_getopt_optreset, [

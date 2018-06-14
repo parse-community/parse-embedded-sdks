@@ -19,25 +19,16 @@
  *
  */
 
-#if (defined (__APPLE__) && defined (__MACH__))
-#define OSX
-#endif
-
-
-#include<ctype.h>
-#include<stdlib.h>
+#pragma comment(lib, "rpcrt4.lib")  // UuidCreate - Minimum supported OS Win 2000
+#include <windows.h>
 #include<string.h>
-#include<uuid/uuid.h>
 
 void parseGetUUID(char *id, size_t id_size) {
-    uuid_t uuid;
-#ifdef OSX
-    uuid_string_t uuid_string;
-#else 
+
+    UUID uuid;
+    UuidCreate(&uuid);
     char uuid_string[37];
-#endif
-    uuid_generate(uuid);
-    uuid_unparse(uuid, uuid_string);
+    UuidToStringA(&uuid, (RPC_CSTR*)&uuid_string);
     strncpy(id, uuid_string, id_size);
     int i = 0;
     for ( ; i < strlen(id) ; i++) {
