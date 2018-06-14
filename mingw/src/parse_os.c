@@ -35,10 +35,13 @@
 
 #include <parse_log.h>
 
+#include <Shlobj.h>  // need to include definitions of constants
+
+
 static char parse_local_store[PATH_MAX] = {0};
 
 static int parseCreateDir(const char* dir) {
-    if (mkdir(dir,  S_ISUID | S_IRWXU)) {
+    if (mkdir(dir)) {
         if (errno == EEXIST) {
             parseLog(PARSE_LOG_INFO, "Local store already exists.\n");
         } else {
@@ -46,25 +49,22 @@ static int parseCreateDir(const char* dir) {
 	    return 1;
         }
     }
-    if (chmod(dir, S_ISUID | S_IRWXU)) {
-        parseLog(PARSE_LOG_WARN, "Got error changing permissions of local store: %s\n", strerror(errno));
-    }
     return 0;
 }
 
 static void parseGetLocalStore(const char* applicationId, char* buffer, size_t size) {
-    char* homedir = NULL;
-    if ((homedir = getenv("HOME")) == NULL) {
-        homedir = getpwuid(getuid())->pw_dir;
-    }
-    strncpy(buffer, homedir, size);
+    char homedir[1000];
+    if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, homedir))) {
+        // Do something with the path
+        strncpy(buffer, homedir, size);
 #ifdef PACKAGE_NAME
-    strncat(buffer, "/.", PATH_MAX - strlen(buffer) - 1);
-    strncat(buffer, PACKAGE_NAME, PATH_MAX - strlen(buffer) - 1);
-    strncat(buffer, "/", PATH_MAX - strlen(buffer) - 1);
+        strncat(buffer, "/.", PATH_MAX - strlen(buffer) - 1);
+        strncat(buffer, PACKAGE_NAME, PATH_MAX - strlen(buffer) - 1);
+        strncat(buffer, "/", PATH_MAX - strlen(buffer) - 1);
 #else
-    strncat(buffer, "/.parse-embedded-local-store/", PATH_MAX - strlen(buffer) - 1);
+        strncat(buffer, "/.parse-embedded-local-store/", PATH_MAX - strlen(buffer) - 1);
 #endif
+    } 
 
     if(parseCreateDir(buffer)) {
         parseLog(PARSE_LOG_ERROR, "Could not create local store dir: %s\n", buffer);
@@ -107,7 +107,7 @@ void parseOsStoreKey(const char* applicationId, const char* key, const char* val
     char key_file[PATH_MAX] = {0};
     strncat(key_file, parse_local_store, PATH_MAX - strlen(key_file) - 1);
     strncat(key_file, key, PATH_MAX - strlen(key_file) - 1);
-    int fdkey = open(key_file, O_WRONLY | O_CREAT | O_TRUNC,  S_ISUID | S_IRWXU);
+    int fdkey = open(key_file, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
     if (fdkey >= 0) {
         parseLog(PARSE_LOG_INFO, "Writing %s\n", key_file);
         int bytes = write(fdkey, value, strlen(value) + 1);
