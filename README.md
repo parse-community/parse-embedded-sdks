@@ -1,10 +1,25 @@
-# Parse Embedded C SDKs
+<p align="center">
+    <img alt="Parse Platform" src="Assets/logo large.png" width="200">
+  </a>
+</p>
 
-[Parse Embedded C SDKs](https://www.parse.com/products/iot) provide support for Arduino Yún, Unix, and RTOS C platforms.
+<h2 align="center">Parse Embedded C SDKs</h2>
 
-These SDKs let you use [Parse](https://www.parse.com/) for building Internet of Things (IoT) applications with connected devices.  Parse is a developer-friendly cloud platform that lets you get an IoT project running in minutes.   With Parse, you can:
+<p align="center">
+    The Parse Embedded C SDKs gives you access to the powerful Parse Server backend with Arduino Yún, Unix and RTOS C platforms.
+</p>
 
-* Build [cross-platform integrations](https://www.parse.com/products) between your connected device and mobile/web/desktop apps.
+<p align="center">
+    <a href="https://twitter.com/intent/follow?screen_name=parseplatform"><img alt="Follow on Twitter" src="https://img.shields.io/twitter/follow/parseplatform?style=social&label=Follow"></a>
+    <a href="https://community.parseplatform.org/"><img alt="Join the conversation" src="https://img.shields.io/discourse/https/community.parseplatform.org/topics.svg"></a>
+   <a href="#backers"><img alt="Backers on Open Collective" src="https://opencollective.com/parse-server/backers/badge.svg" /></a>
+    <a href="#sponsors"><img alt="Sponsors on Open Collective" src="https://opencollective.com/parse-server/sponsors/badge.svg" /></a>
+</p>
+<br>
+
+These SDKs let you use the Parse Platform for building Internet of Things (IoT) applications with connected devices. Parse is a developer-friendly cloud platform that lets you get an IoT project running in minutes. With Parse, you can:
+
+* Build cross-platform integrations between your connected device and mobile/web/desktop apps.
 
 * Allow your users to personalize and monitor their connected devices.
     * Parse is the easiest way to [build user login](https://www.parse.com/docs/ios_guide#ui-login/iOS) on mobile apps.  Parse also has [user session APIs](https://www.parse.com/docs/ios_guide#sessions/iOS) in all mobile SDKs, which let you provision restricted sessions from the phone after the user logs into your app.  You can then transfer this restricted session token to your device so that your device can access user-specific data.
