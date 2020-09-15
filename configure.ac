@@ -1,7 +1,27 @@
 AC_INIT(parse-embedded, 1.0.5, damiank@fb.com)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(common/simplejson.c)
-AC_CONFIG_SRCDIR(unix/src/parse.c)
+
+# AC_CANONICAL_HOST is needed to access $host_os
+AC_CANONICAL_HOST
+
+os_dir=unix
+
+case "${host_os}" in
+        cygwin*|mingw*)
+            os_dir=mingw
+            ;;
+esac
+
+AM_CONDITIONAL([WINDOWS], [test "$os_dir" = "mingw"])
+AM_CONDITIONAL([UNIX], [test "$os_dir" = "unix"])
+
+
+AM_COND_IF([UNIX],
+           AC_CONFIG_SRCDIR(unix/src/parse.c),
+           AC_CONFIG_SRCDIR(mingw/src/parse.c)
+           )
+
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE
@@ -18,8 +38,16 @@ AC_SUBST(CC)
 
 AC_CHECK_LIB(curl, curl_easy_perform)
 AC_CHECK_HEADERS(curl/curl.h)
-AC_CHECK_LIB(uuid, uuid_generate_random)
-AC_CHECK_HEADERS(uuid/uuid.h)
+
+
+AM_COND_IF([UNIX],
+           AC_CHECK_LIB(uuid, uuid_generate_random),
+           AC_CHECK_LIB(rpcrt4, UuidCreate, , [AC_MSG_ERROR([cannot link with rpcrt4.dll.])])
+           )
+
+AM_COND_IF([UNIX],
+           AC_CHECK_HEADERS(uuid/uuid.h)
+           )
 
 AC_CACHE_CHECK([whether getopt has optreset support],
         ac_cv_have_getopt_optreset, [
@@ -42,15 +70,15 @@ AC_ARG_ENABLE([yun],
 esac],[yun=false])
 AM_CONDITIONAL([YUN_SUPPORT], [test x$yun = xtrue])
 
-AC_CONFIG_FILES([
-  Makefile
-  unix/Makefile
-  unix/src/Makefile
-  common/Makefile
-])
+AC_CONFIG_FILES([Makefile common/Makefile])
+
+AM_COND_IF([WINDOWS],
+           AC_CONFIG_FILES([mingw/Makefile mingw/src/Makefile]),
+           AC_CONFIG_FILES([unix/Makefile unix/src/Makefile])
+           )
 
 AM_COND_IF([YUN_SUPPORT],
-           [AC_CONFIG_FILES([unix/yun/Makefile])])
+           [AC_CONFIG_FILES([${os_dir}/yun/Makefile])])
 
 AC_OUTPUT
 
